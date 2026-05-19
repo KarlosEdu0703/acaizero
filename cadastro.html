@@ -60,64 +60,72 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // TRAVA 1: Impede até de ver a página se já estiver logado
-    if (localStorage.getItem('usuario_logado')) {
-        window.location.href = 'index.html';
-    }
+    // TRAVA 1: Impede até de ver a página se já estiver logado (mantida no localStorage por enquanto)
+if (localStorage.getItem('usuario_logado')) {
+    window.location.href = 'index.html';
+}
 
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // TRAVA 2: Evita duplo clique rápido no botão
-        const btnSubmit = this.querySelector('button[type="submit"]');
-        btnSubmit.disabled = true;
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const btnSubmit = this.querySelector('button[type="submit"]');
+    btnSubmit.disabled = true;
+    btnSubmit.innerText = "CADASTRANDO..."; // Dá um feedback visual
 
-        // TRAVA 3: Verificação de segurança de última hora antes de salvar
-        if (localStorage.getItem('usuario_logado')) {
-            Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Você já possui uma sessão ativa!' });
-            setTimeout(() => { window.location.href = 'index.html'; }, 2000);
-            return;
-        }
-        
-        const novoUsuario = {
-            nome: document.getElementById('nome').value.trim(),
-            email: document.getElementById('email').value.trim().toLowerCase(),
-            whatsapp: document.getElementById('whatsapp').value.trim(),
-            senha: document.getElementById('senha').value,
-            endereco: "", 
-            bairro: "", 
-            cidade: ""
-        };
+    // Pega os dados do formulário
+    const novoUsuario = {
+        nome: document.getElementById('nome').value.trim(),
+        email: document.getElementById('email').value.trim().toLowerCase(),
+        whatsapp: document.getElementById('whatsapp').value.trim(),
+        senha: document.getElementById('senha').value
+    };
 
-        let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+    try {
+        // Envia os dados para o PHP usando fetch
+        const resposta = await fetch('processo_cadastro.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(novoUsuario)
+        });
 
-        // TRAVA 4: UNIQUE KEY (Garante que o e-mail não seja duplicado na lista)
-        if (usuarios.some(u => u.email === novoUsuario.email)) {
+        const resultado = await resposta.json();
+
+        if (resultado.status === 'sucesso') {
+            // Se o banco salvou, mostramos o SweetAlert
+            Swal.fire({
+                icon: 'success',
+                title: 'Cadastro Realizado!',
+                text: `Bem-vindo, ${novoUsuario.nome.split(' ')[0]}!`,
+                showConfirmButton: false,
+                timer: 2000,
+                didClose: () => { 
+                    window.location.href = 'login.html'; // Manda para o login após cadastrar
+                }
+            });
+        } else {
+            // Se o e-mail já existir ou der erro no banco
             Swal.fire({ 
                 icon: 'error', 
                 title: 'Erro', 
-                text: 'Este e-mail já está cadastrado!' 
+                text: resultado.mensagem 
             });
-            btnSubmit.disabled = false; 
-            return;
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = "CADASTRAR CONTA";
         }
 
-        // Registra e Loga o usuário
-        usuarios.push(novoUsuario);
-        localStorage.setItem('usuarios', JSON.stringify(usuarios));
-        localStorage.setItem('usuario_logado', JSON.stringify(novoUsuario));
-
-        document.getElementById('registerForm').reset();
-
-        Swal.fire({
-            icon: 'success',
-            title: 'Cadastro Realizado!',
-            text: `Bem-vindo, ${novoUsuario.nome.split(' ')[0]}!`,
-            showConfirmButton: false,
-            timer: 2000,
-            didClose: () => { window.location.href = 'index.html'; }
+    } catch (erro) {
+        Swal.fire({ 
+            icon: 'error', 
+            title: 'Erro de Conexão', 
+            text: 'Não foi possível conectar ao servidor.' 
         });
-    });
+        console.error(erro);
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = "CADASTRAR CONTA";
+    }
+});
 </script>
 </body>
 </html>

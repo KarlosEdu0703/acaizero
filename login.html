@@ -43,27 +43,65 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const email = document.getElementById('email').value;
-        const senha = document.getElementById('senha').value;
-        
-        const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-        
-        // Procura usuário com email e senha correspondentes
-        const usuarioValido = usuarios.find(u => u.email === email && u.senha === senha);
+   document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const btnSubmit = this.querySelector('button[type="submit"]');
+    btnSubmit.disabled = true;
+    btnSubmit.innerText = "ENTRANDO..."; // Feedback visual de carregamento
 
-        if (usuarioValido) {
-            localStorage.setItem('usuario_logado', JSON.stringify(usuarioValido));
+    const dadosLogin = {
+        email: document.getElementById('email').value.trim().toLowerCase(),
+        senha: document.getElementById('senha').value
+    };
+
+    try {
+        // Envia os dados para o arquivo PHP que criamos
+        const resposta = await fetch('processo_login.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dadosLogin)
+        });
+
+        const resultado = await resposta.json();
+
+        if (resultado.status === 'sucesso') {
+            // Guarda os dados do usuário logado vindo do banco no localStorage
+            // Isso garante que o arquivo perfil.html e a index saibam quem está logado
+            localStorage.setItem('usuario_logado', JSON.stringify(resultado.usuario));
+            
             Swal.fire({
-                icon: 'success', title: 'Login efetuado!', showConfirmButton: false, timer: 1500,
-                didClose: () => { window.location.href = 'index.html'; }
+                icon: 'success', 
+                title: 'Login efetuado!', 
+                showConfirmButton: false, 
+                timer: 1500,
+                didClose: () => { 
+                    window.location.href = 'index.html'; 
+                }
             });
         } else {
-            Swal.fire({ icon: 'error', title: 'Erro de Autenticação', text: 'E-mail ou senha incorretos.' });
+            // Exibe o erro retornado pelo PHP (E-mail ou senha incorretos)
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'Erro de Autenticação', 
+                text: resultado.mensagem 
+            });
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = "ENTRAR";
         }
-    });
+    } catch (erro) {
+        Swal.fire({ 
+            icon: 'error', 
+            title: 'Erro de Conexão', 
+            text: 'Não foi possível conectar ao servidor.' 
+        });
+        console.error(erro);
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = "ENTRAR";
+    }
+});
 </script>
 </body>
 </html>

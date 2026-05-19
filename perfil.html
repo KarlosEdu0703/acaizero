@@ -137,105 +137,134 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    // Carrega dados do usuário logado
-    const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+    // Carrega dados do utilizador logado vindos da sessão do banco
+const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+
+// Se não houver nenhum utilizador com sessão ativa, redireciona para o index
+if (!usuarioLogado) { 
+    window.location.href = 'index.html'; 
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Preenche os elementos de texto do ecrã
+    document.getElementById('display-nome').innerText = usuarioLogado.nome;
+    document.getElementById('display-email').innerText = usuarioLogado.email;
     
-    // Se não tiver ninguém logado, expulsa para o index
-    if (!usuarioLogado) { window.location.href = 'index.html'; }
+    // Preenche os campos do formulário com os dados atuais da base de dados
+    document.getElementById('nome').value = usuarioLogado.nome;
+    document.getElementById('whatsapp').value = usuarioLogado.whatsapp;
+    document.getElementById('endereco').value = usuarioLogado.endereco || '';
+    document.getElementById('bairro').value = usuarioLogado.bairro || '';
+    document.getElementById('cidade').value = usuarioLogado.cidade || '';
 
-    document.addEventListener('DOMContentLoaded', () => {
-        // Preenche os textos de exibição
-        document.getElementById('display-nome').innerText = usuarioLogado.nome;
-        document.getElementById('display-email').innerText = usuarioLogado.email;
-        
-        // Preenche o formulário
-        document.getElementById('nome').value = usuarioLogado.nome;
-        document.getElementById('whatsapp').value = usuarioLogado.whatsapp;
-        document.getElementById('endereco').value = usuarioLogado.endereco || '';
-        document.getElementById('bairro').value = usuarioLogado.bairro || '';
-        document.getElementById('cidade').value = usuarioLogado.cidade || '';
+    // Carrega a foto de perfil personalizada se ela existir na base de dados
+    if (usuarioLogado.foto) {
+        document.getElementById('imagePreview').style.backgroundImage = `url(${usuarioLogado.foto})`;
+    } else {
+        document.getElementById('imagePreview').style.backgroundImage = `url('https://ui-avatars.com/api/?name=${encodeURIComponent(usuarioLogado.nome)}&background=6a1b9a&color=fff')`;
+    }
 
-        // Carrega a foto personalizada se existir
-        if (usuarioLogado.foto) {
-            document.getElementById('imagePreview').style.backgroundImage = `url(${usuarioLogado.foto})`;
+    gerarPedidosFake();
+});
+
+// Lógica para detetar o Upload de Foto e conversão temporária para Base64
+document.getElementById('imageUpload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const base64Image = event.target.result;
+            document.getElementById('imagePreview').style.backgroundImage = `url(${base64Image})`;
+            
+            // Atribui temporariamente a string da imagem ao objeto local
+            usuarioLogado.foto = base64Image;
+        }
+        reader.readAsDataURL(file);
+    }
+});
+
+// Guardar os dados do Formulário diretamente na Base de Dados
+document.getElementById('perfilForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const btnSubmit = this.querySelector('button[type="submit"]');
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>A GUARDAR...';
+
+    // Atualiza o objeto com as novas strings digitadas nos inputs
+    usuarioLogado.nome = document.getElementById('nome').value.trim();
+    usuarioLogado.whatsapp = document.getElementById('whatsapp').value.trim();
+    usuarioLogado.endereco = document.getElementById('endereco').value.trim();
+    usuarioLogado.bairro = document.getElementById('bairro').value.trim();
+    usuarioLogado.cidade = document.getElementById('cidade').value.trim();
+
+    try {
+        // Faz o envio assíncrono para o atualizar_perfil.php
+        const resposta = await fetch('atualizar_perfil.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(usuarioLogado)
+        });
+
+        const resultado = await resposta.json();
+
+        if (resultado.status === 'sucesso') {
+            // Sincroniza os novos dados atualizados no localStorage do ecrã atual
+            localStorage.setItem('usuario_logado', JSON.stringify(usuarioLogado));
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Perfil Atualizado!',
+                text: 'As suas informações foram gravadas com sucesso.',
+                confirmButtonColor: '#6a1b9a'
+            }).then(() => { 
+                window.location.reload(); 
+            });
         } else {
-            document.getElementById('imagePreview').style.backgroundImage = `url('https://ui-avatars.com/api/?name=${encodeURIComponent(usuarioLogado.nome)}&background=6a1b9a&color=fff')`;
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: resultado.mensagem
+            });
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = '<i class="fas fa-check-circle me-2"></i>SALVAR ALTERAÇÕES';
         }
-
-        gerarPedidosFake();
-    });
-
-    // Lógica para Upload de Foto e conversão para Base64 (salvar imagem no localStorage)
-    document.getElementById('imageUpload').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const base64Image = event.target.result;
-                document.getElementById('imagePreview').style.backgroundImage = `url(${base64Image})`;
-                
-                // Salva a foto nos dados do usuário logado
-                usuarioLogado.foto = base64Image;
-                atualizarBancoGlobal(usuarioLogado);
-            }
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // Salvar Dados do Formulário
-    document.getElementById('perfilForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        usuarioLogado.nome = document.getElementById('nome').value;
-        usuarioLogado.whatsapp = document.getElementById('whatsapp').value;
-        usuarioLogado.endereco = document.getElementById('endereco').value;
-        usuarioLogado.bairro = document.getElementById('bairro').value;
-        usuarioLogado.cidade = document.getElementById('cidade').value;
-
-        atualizarBancoGlobal(usuarioLogado);
-
+    } catch (erro) {
         Swal.fire({
-            icon: 'success',
-            title: 'Perfil Atualizado!',
-            text: 'Suas informações foram salvas com sucesso.',
-            confirmButtonColor: '#6a1b9a'
-        }).then(() => { window.location.reload(); });
-    });
-
-    // Função para sincronizar a sessão atual com a lista global de usuários
-    function atualizarBancoGlobal(userObj) {
-        let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-        const index = usuarios.findIndex(u => u.email === userObj.email);
-        
-        if (index !== -1) {
-            usuarios[index] = userObj;
-            localStorage.setItem('usuarios', JSON.stringify(usuarios));
-            localStorage.setItem('usuario_logado', JSON.stringify(userObj));
-        }
+            icon: 'error',
+            title: 'Erro de Conexão',
+            text: 'Não foi possível estabelecer ligação com o servidor.'
+        });
+        console.error(erro);
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<i class="fas fa-check-circle me-2"></i>SALVAR ALTERAÇÕES';
     }
+});
 
-    function logout() {
-        localStorage.removeItem('usuario_logado');
-        window.location.href = 'index.html';
-    }
+function logout() {
+    localStorage.removeItem('usuario_logado');
+    window.location.href = 'index.html';
+}
 
-    function gerarPedidosFake() {
-        const lista = document.getElementById('lista-pedidos');
-        // Simula pedidos para o histórico não ficar vazio
-        const pedidos = [
-            { id: '8542', data: '15/05/2026', total: 'R$ 45,90', status: 'Entregue', cor: 'success' },
-            { id: '8210', data: '10/05/2026', total: 'R$ 32,00', status: 'Cancelado', cor: 'danger' }
-        ];
+function gerarPedidosFake() {
+    const lista = document.getElementById('lista-pedidos');
+    // Mantido estático temporariamente enquanto não integramos a tabela de pedidos
+    const pedidos = [
+        { id: '8542', data: '15/05/2026', total: 'R$ 45,90', status: 'Entregue', cor: 'success' },
+        { id: '8210', data: '10/05/2026', total: 'R$ 32,00', status: 'Cancelado', cor: 'danger' }
+    ];
 
-        lista.innerHTML = pedidos.map(p => `
-            <tr>
-                <td class="fw-bold">#${p.id}</td>
-                <td>${p.data}</td>
-                <td class="fw-bold text-primary">${p.total}</td>
-                <td class="text-center"><span class="badge bg-${p.cor}">${p.status}</span></td>
-            </tr>
-        `).join('');
-    }
+    lista.innerHTML = pedidos.map(p => `
+        <tr>
+            <td class="fw-bold">#${p.id}</td>
+            <td>${p.data}</td>
+            <td class="fw-bold text-primary">${p.total}</td>
+            <td class="text-center"><span class="badge bg-${p.cor}">${p.status}</span></td>
+        </tr>
+    `).join('');
+}
 </script>
 
 </body>

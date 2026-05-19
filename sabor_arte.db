@@ -1,14 +1,40 @@
-USE acaizero;
+-- Criação do banco de dados (opcional, caso ainda não tenha criado)
+CREATE DATABASE IF NOT EXISTS sabor_arte CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE sabor_arte;
 
--- Garante que a tabela tenha os nomes que o PHP vai usar
-CREATE TABLE IF NOT EXISTS usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    senha VARCHAR(255) NOT NULL,
-    whatsapp VARCHAR(20),
-    endereco VARCHAR(255),
-    bairro VARCHAR(100),
-    cidade VARCHAR(100),
-    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+-- 1. TABELA DE USUÁRIOS
+-- Armazena os dados de cadastro, endereço para entrega e link/base64 da foto de perfil
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `nome` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(100) NOT NULL UNIQUE,
+  `senha` VARCHAR(255) NOT NULL,
+  `whatsapp` VARCHAR(20) NOT NULL,
+  `endereco` VARCHAR(255) DEFAULT NULL,
+  `bairro` VARCHAR(100) DEFAULT NULL,
+  `cidade` VARCHAR(100) DEFAULT NULL,
+  `foto` LONGTEXT DEFAULT NULL, -- Campo preparado para armazenar a foto personalizada (Base64 ou URL)
+  `criado_em` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- 2. TABELA DE PEDIDOS
+-- Guarda o histórico de compras e vincula cada pedido ao seu respectivo usuário
+CREATE TABLE IF NOT EXISTS `pedidos` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `usuario_id` INT NOT NULL,
+  `total` DECIMAL(10,2) NOT NULL,
+  `status` VARCHAR(50) DEFAULT 'Pendente', -- Exemplos: Pendente, Preparando, Entregue, Cancelado
+  `data_pedido` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`usuario_id`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- 3. TABELA DE ITENS DO PEDIDO (Opcional - para detalhar o que foi comprado)
+-- Se quiser salvar exatamente quais hambúrgueres ou açaís estavam no carrinho
+CREATE TABLE IF NOT EXISTS `itens_pedido` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `pedido_id` INT NOT NULL,
+  `produto_nome` VARCHAR(100) NOT NULL,
+  `quantidade` INT NOT NULL,
+  `preco_unitario` DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (`pedido_id`) REFERENCES `pedidos`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB;
