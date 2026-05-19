@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sabor & Arte | Açaí e Burgers</title>
+    <title>Sabor & Arte | Açaí, Burgers e Porções</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -75,7 +75,7 @@
 <header class="hero-section text-white text-center">
     <div class="container">
         <h1 class="display-3 fw-bold mb-3">O Melhor Sabor da Região</h1>
-        <p class="lead mb-4 fs-4">Hambúrgueres artesanais e açaís feitos com amor.</p>
+        <p class="lead mb-4 fs-4">Hambúrgueres artesanais, porções e açaís feitos com amor.</p>
         <a href="#cardapio" class="btn btn-warning btn-lg fw-bold px-5 py-3 shadow">QUERO PEDIR AGORA</a>
     </div>
 </header>
@@ -83,17 +83,20 @@
 <main class="container my-5" id="cardapio">
     <div class="text-center mb-5">
         <h2 class="fw-bold display-6">Nosso Cardápio</h2>
-        <div class="btn-group mt-3" role="group">
+        <div class="btn-group mt-3 flex-wrap" role="group">
             <button type="button" class="btn btn-outline-dark filter-btn active" data-filter="all">Tudo</button>
             <button type="button" class="btn btn-outline-dark filter-btn" data-filter="burger">Burgers</button>
             <button type="button" class="btn btn-outline-dark filter-btn" data-filter="acai">Açaí</button>
+            <button type="button" class="btn btn-outline-dark filter-btn" data-filter="combo">Combos</button>
+            <button type="button" class="btn btn-outline-dark filter-btn" data-filter="porcao">Porções</button>
         </div>
     </div>
 
     <div class="row g-4" id="products-grid">
+        
         <div class="col-12 col-md-6 col-lg-4 product-item" data-category="burger">
             <div class="card h-100 shadow-sm product-card">
-                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500" class="card-img-top" alt="Burger">
+                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500" class="card-img-top" alt="Monster Burger">
                 <div class="card-body d-flex flex-column">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-warning text-dark">Artesanal</span>
@@ -106,20 +109,156 @@
             </div>
         </div>
 
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="burger">
+            <div class="card h-100 shadow-sm product-card">
+                <img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?q=80&w=1068&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Classic Smash">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-warning text-dark">Clássico</span>
+                        <span class="h5 mb-0 fw-bold text-primary">R$ 22,90</span>
+                    </div>
+                    <h5 class="card-title fw-bold">Classic Smash</h5>
+                    <p class="card-text text-muted small flex-grow-1">Pão brioche macio, smash burger de 90g com crostinha, cheddar, picles e molho especial da casa.</p>
+                    <button class="btn btn-primary w-100 fw-bold btn-add-cart" data-id="3" data-nome="Classic Smash" data-preco="22.90">Adicionar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="burger">
+            <div class="card h-100 shadow-sm product-card">
+                <img src="https://images.unsplash.com/photo-1610440042657-612c34d95e9f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Bacon Lover">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-warning text-dark">Mais Vendido</span>
+                        <span class="h5 mb-0 fw-bold text-primary">R$ 28,90</span>
+                    </div>
+                    <h5 class="card-title fw-bold">Bacon Lover</h5>
+                    <p class="card-text text-muted small flex-grow-1">Pão australiano, blend de 160g, duplo queijo prato, cebola caramelizada e fatias generosas de bacon.</p>
+                    <button class="btn btn-primary w-100 fw-bold btn-add-cart" data-id="4" data-nome="Bacon Lover" data-preco="28.90">Adicionar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="porcao">
+            <div class="card h-100 shadow-sm product-card">
+                <img src="https://images.unsplash.com/photo-1608219994488-cc269412b3e4?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Batata Frita Tradicional">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-success text-white">Crocante</span>
+                        <span class="h5 mb-0 fw-bold text-primary">R$ 15,00</span>
+                    </div>
+                    <h5 class="card-title fw-bold">Batata Frita Média</h5>
+                    <p class="card-text text-muted small flex-grow-1">Porção caprichada de batatas fritas sequinhas e crocantes. Acompanha maionese da casa.</p>
+                    <button class="btn btn-primary w-100 fw-bold btn-add-cart" data-id="9" data-nome="Batata Frita Média" data-preco="15.00">Adicionar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="porcao">
+            <div class="card h-100 shadow-sm product-card">
+                <img src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?q=80&w=500" class="card-img-top" alt="Batata com Cheddar e Bacon">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-warning text-dark">Especial</span>
+                        <span class="h5 mb-0 fw-bold text-primary">R$ 28,90</span>
+                    </div>
+                    <h5 class="card-title fw-bold">Fritas c/ Cheddar e Bacon</h5>
+                    <p class="card-text text-muted small flex-grow-1">Nossa batata frita coberta com muito creme de cheddar derretido e cubos de bacon crocante.</p>
+                    <button class="btn btn-primary w-100 fw-bold btn-add-cart" data-id="10" data-nome="Fritas Cheddar e Bacon" data-preco="28.90">Adicionar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="porcao">
+            <div class="card h-100 shadow-sm product-card">
+                <img src="https://images.unsplash.com/photo-1630825533949-74f62f54553a?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Anéis de Cebola">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-danger text-white">Novo</span>
+                        <span class="h5 mb-0 fw-bold text-primary">R$ 20,00</span>
+                    </div>
+                    <h5 class="card-title fw-bold">Onion Rings</h5>
+                    <p class="card-text text-muted small flex-grow-1">Porção de anéis de cebola empanados e super crocantes. Acompanha molho barbecue.</p>
+                    <button class="btn btn-primary w-100 fw-bold btn-add-cart" data-id="11" data-nome="Onion Rings" data-preco="20.00">Adicionar</button>
+                </div>
+            </div>
+        </div>
+
         <div class="col-12 col-md-6 col-lg-4 product-item" data-category="acai">
             <div class="card h-100 shadow-sm product-card">
-                <img src="https://images.unsplash.com/photo-1590301157890-4810ed352733?q=80&w=500" class="card-img-top" alt="Açaí">
+                <img src="https://images.unsplash.com/photo-1684403620650-81dc661a69db?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Açaí Premium">
                 <div class="card-body d-flex flex-column">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-info text-white">Energético</span>
                         <span class="h5 mb-0 fw-bold text-primary">R$ 25,00</span>
                     </div>
                     <h5 class="card-title fw-bold">Açaí Premium 500ml</h5>
-                    <p class="card-text text-muted small flex-grow-1">Açaí puro acompanhado de granola premium e morangos frescos.</p>
-                    <button class="btn btn-primary w-100 fw-bold btn-add-cart" data-id="2" data-nome="Açaí Premium" data-preco="25.00">Adicionar</button>
+                    <p class="card-text text-muted small flex-grow-1">Açaí puro e cremoso acompanhado de granola premium e morangos frescos picados.</p>
+                    <button class="btn btn-primary w-100 fw-bold btn-add-cart" data-id="2" data-nome="Açaí Premium 500ml" data-preco="25.00">Adicionar</button>
                 </div>
             </div>
         </div>
+
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="acai">
+            <div class="card h-100 shadow-sm product-card">
+                <img src="https://images.unsplash.com/photo-1494597564530-871f2b93ac55?q=80&w=500" class="card-img-top" alt="Açaí Tropical">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-info text-white">Refrescante</span>
+                        <span class="h5 mb-0 fw-bold text-primary">R$ 18,00</span>
+                    </div>
+                    <h5 class="card-title fw-bold">Açaí Tropical 300ml</h5>
+                    <p class="card-text text-muted small flex-grow-1">Perfeito para o calor! Açaí batido com banana, finalizado com kiwi, manga, morango e fio de leite condensado.</p>
+                    <button class="btn btn-primary w-100 fw-bold btn-add-cart" data-id="5" data-nome="Açaí Tropical 300ml" data-preco="18.00">Adicionar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="acai">
+            <div class="card h-100 shadow-sm product-card">
+                <img src="https://static-images.ifood.com.br/image/upload/t_high/pratos/fdf03a73-04a1-4078-86be-e9f8c801f357/202111022213_UKF2_i.jpg" class="card-img-top" alt="Barca de Açaí">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-dark text-white">Para Dividir</span>
+                        <span class="h5 mb-0 fw-bold text-primary">R$ 45,00</span>
+                    </div>
+                    <h5 class="card-title fw-bold">Barca de Açaí 1L</h5>
+                    <p class="card-text text-muted small flex-grow-1">1 Litro do nosso melhor açaí. Acompanha leite em pó, Nutella, paçoca, banana e morango em abundância.</p>
+                    <button class="btn btn-primary w-100 fw-bold btn-add-cart" data-id="6" data-nome="Barca de Açaí 1L" data-preco="45.00">Adicionar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="combo">
+            <div class="card h-100 shadow-sm product-card">
+                <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=500" class="card-img-top" alt="Combo Casal">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-danger text-white">Promoção</span>
+                        <span class="h5 mb-0 fw-bold text-primary">R$ 65,90</span>
+                    </div>
+                    <h5 class="card-title fw-bold">Combo Casal</h5>
+                    <p class="card-text text-muted small flex-grow-1">2x Classic Smash Burgers + 1 Porção de Fritas Média + 2 Refrigerantes Lata 350ml.</p>
+                    <button class="btn btn-primary w-100 fw-bold btn-add-cart" data-id="7" data-nome="Combo Casal" data-preco="65.90">Adicionar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="combo">
+            <div class="card h-100 shadow-sm product-card">
+                <img src="https://images.unsplash.com/photo-1610440042657-612c34d95e9f?q=80&w=500" class="card-img-top" alt="Combo Monstrão">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-danger text-white">Promoção</span>
+                        <span class="h5 mb-0 fw-bold text-primary">R$ 48,00</span>
+                    </div>
+                    <h5 class="card-title fw-bold">Combo Monstrão</h5>
+                    <p class="card-text text-muted small flex-grow-1">1x Monster Burger + 1 Porção de Fritas com Cheddar e Bacon + 1 Refrigerante Lata 350ml.</p>
+                    <button class="btn btn-primary w-100 fw-bold btn-add-cart" data-id="8" data-nome="Combo Monstrão" data-preco="48.00">Adicionar</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 </main>
 
@@ -166,7 +305,7 @@
                 total += item.preco * item.quantidade;
                 cartItemsContainer.innerHTML += `
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div><h6 class="mb-0 fw-bold">${item.nome}</h6><small>R$ ${item.preco.toFixed(2)}</small></div>
+                        <div><h6 class="mb-0 fw-bold">${item.nome}</h6><small>R$ ${item.preco.toFixed(2).replace('.', ',')}</small></div>
                         <div class="quantity-control">
                             <button class="btn btn-sm" onclick="changeQty('${item.id}', -1)">-</button>
                             <span>${item.quantidade}</span>
@@ -175,7 +314,7 @@
                     </div>`;
             });
         }
-        cartTotal.innerText = `R$ ${total.toFixed(2)}`;
+        cartTotal.innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
         localStorage.setItem('cart', JSON.stringify(cart));
     }
 
@@ -214,19 +353,16 @@
         });
     });
 
-    // CONTROLE DE SESSÃO DO UTILIZADOR COM LINK PARA PERFIL E ALTERNÂNCIA DO MENU
+    // CONTROLE DE SESSÃO DO UTILIZADOR
     function checarUsuario() {
         const userArea = document.getElementById('user-area');
         const menuCadastro = document.getElementById('menu-cadastro');
         const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
 
         if (usuarioLogado) {
-            // Esconde o botão de cadastro do menu superior
             if (menuCadastro) menuCadastro.style.display = 'none';
 
             const primeiroNome = usuarioLogado.nome.split(' ')[0];
-            
-            // Define o avatar: usa a foto personalizada se houver, senão gera o avatar padrão
             const urlAvatar = usuarioLogado.foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(usuarioLogado.nome)}&background=6a1b9a&color=fff`;
 
             userArea.innerHTML = `
@@ -243,7 +379,6 @@
                 </div>
             `;
         } else {
-            // Se deslogado, exibe novamente a opção de cadastro
             if (menuCadastro) menuCadastro.style.display = 'block';
         }
     }
@@ -253,7 +388,7 @@
         window.location.reload();
     }
 
-    // CHECKOUT VIA WHATSAPP COM INTEGRAÇÃO DE ENDEREÇO E DADOS DO PERFIL
+    // CHECKOUT VIA WHATSAPP
     document.getElementById('checkout-btn').addEventListener('click', () => {
         if(cart.length === 0) {
             Swal.fire({ icon: 'warning', title: 'Carrinho Vazio', text: 'Adicione itens antes de finalizar!' });
@@ -267,7 +402,6 @@
             msg += `*Cliente:* ${usuarioLogado.nome}\n`;
             msg += `*WhatsApp:* ${usuarioLogado.whatsapp}\n`;
             
-            // Puxa os dados de endereço atualizados dinamicamente do perfil do usuário
             if (usuarioLogado.endereco) {
                 msg += `*Endereço:* ${usuarioLogado.endereco}\n`;
                 msg += `*Bairro:* ${usuarioLogado.bairro || 'Não informado'}\n`;
@@ -280,14 +414,13 @@
         }
 
         msg += "*Itens do Pedido:*\n";
-        cart.forEach(i => msg += `• ${i.quantidade}x ${i.nome} (R$ ${(i.preco * i.quantidade).toFixed(2)})\n`);
+        cart.forEach(i => msg += `• ${i.quantidade}x ${i.nome} (R$ ${(i.preco * i.quantidade).toFixed(2).replace('.', ',')})\n`);
         
         msg += `\n*Total:* ${document.getElementById('cart-total').innerText}`;
         
         window.open(`https://wa.me/5531993013900?text=${encodeURIComponent(msg)}`, '_blank');
     });
 
-    // Inicialização das funções ao carregar a página
     updateCartUI();
     checarUsuario();
 </script>
