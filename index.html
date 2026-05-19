@@ -1,7 +1,3 @@
-<?php
-session_start();
-require_once 'config.php';
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -48,7 +44,7 @@ require_once 'config.php';
 
 <nav class="navbar navbar-expand-lg navbar-light sticky-top">
     <div class="container">
-        <a class="navbar-brand" href="index.php"><i class="fas fa-ice-cream me-2"></i>SABOR & ARTE</a>
+        <a class="navbar-brand" href="index.html"><i class="fas fa-ice-cream me-2"></i>SABOR & ARTE</a>
         
         <div class="d-flex align-items-center order-lg-3">
             <a class="nav-link px-3 position-relative me-3" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
@@ -56,22 +52,11 @@ require_once 'config.php';
                 <span class="cart-badge" id="cart-count">0</span>
             </a>
 
-            <?php if(isset($_SESSION['user_id'])): ?>
-                <div class="dropdown">
-                    <button class="btn-profile dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        <i class="fas fa-user-circle me-2"></i>Olá, <?= explode(' ', $_SESSION['user_nome'])[0] ?>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
-                        <li><a class="dropdown-item" href="perfil.php"><i class="fas fa-user me-2"></i>Meu Perfil</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
-                    </ul>
-                </div>
-            <?php else: ?>
-                <button class="btn-profile" data-bs-toggle="modal" data-bs-target="#loginModal">
+            <div id="user-area">
+                <a href="login.html" class="btn-profile text-decoration-none">
                     <i class="fas fa-user-circle me-2"></i>Entrar
-                </button>
-            <?php endif; ?>
+                </a>
+            </div>
         </div>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -81,7 +66,7 @@ require_once 'config.php';
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link px-3" href="#cardapio">Cardápio</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="cadastro.php">Cadastrar</a></li>
+                <li class="nav-item" id="menu-cadastro"><a class="nav-link px-3" href="cadastro.html">Cadastrar</a></li>
             </ul>
         </div>
     </div>
@@ -137,22 +122,6 @@ require_once 'config.php';
         </div>
     </div>
 </main>
-
-<div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
-            <div class="modal-body p-4 text-center">
-                <h4 class="fw-bold mb-3">Entrar</h4>
-                <form action="logar_acao.php" method="POST">
-                    <input type="email" name="email" class="form-control mb-3" placeholder="Seu e-mail" required>
-                    <input type="password" name="senha" class="form-control mb-3" placeholder="Sua senha" required>
-                    <button type="submit" class="btn btn-primary w-100 fw-bold py-2" style="background: var(--primary-color); border:none;">ENTRAR</button>
-                </form>
-                <p class="mt-3 small">Não tem conta? <a href="cadastro.php" class="text-primary fw-bold text-decoration-none">Cadastre-se</a></p>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -233,7 +202,7 @@ require_once 'config.php';
         }
     });
 
-    // Filtros
+    // Filtros do Cardápio
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelector('.filter-btn.active').classList.remove('active');
@@ -245,15 +214,82 @@ require_once 'config.php';
         });
     });
 
-    // Checkout WhatsApp
+    // CONTROLE DE SESSÃO DO UTILIZADOR COM LINK PARA PERFIL E ALTERNÂNCIA DO MENU
+    function checarUsuario() {
+        const userArea = document.getElementById('user-area');
+        const menuCadastro = document.getElementById('menu-cadastro');
+        const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+
+        if (usuarioLogado) {
+            // Esconde o botão de cadastro do menu superior
+            if (menuCadastro) menuCadastro.style.display = 'none';
+
+            const primeiroNome = usuarioLogado.nome.split(' ')[0];
+            
+            // Define o avatar: usa a foto personalizada se houver, senão gera o avatar padrão
+            const urlAvatar = usuarioLogado.foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(usuarioLogado.nome)}&background=6a1b9a&color=fff`;
+
+            userArea.innerHTML = `
+                <div class="dropdown">
+                    <button class="btn-profile dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+                        <img src="${urlAvatar}" class="rounded-circle me-2" width="24" height="24" style="object-fit: cover;">
+                        Olá, ${primeiroNome}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow mt-2">
+                        <li><a class="dropdown-item" href="perfil.html"><i class="fas fa-user-circle me-2 text-muted"></i>Meu Perfil</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+                    </ul>
+                </div>
+            `;
+        } else {
+            // Se deslogado, exibe novamente a opção de cadastro
+            if (menuCadastro) menuCadastro.style.display = 'block';
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('usuario_logado');
+        window.location.reload();
+    }
+
+    // CHECKOUT VIA WHATSAPP COM INTEGRAÇÃO DE ENDEREÇO E DADOS DO PERFIL
     document.getElementById('checkout-btn').addEventListener('click', () => {
-        let msg = "Novo Pedido:\n";
-        cart.forEach(i => msg += `${i.quantidade}x ${i.nome}\n`);
-        msg += `Total: ${document.getElementById('cart-total').innerText}`;
-        window.open(`https://wa.me/5500000000000?text=${encodeURIComponent(msg)}`, '_blank');
+        if(cart.length === 0) {
+            Swal.fire({ icon: 'warning', title: 'Carrinho Vazio', text: 'Adicione itens antes de finalizar!' });
+            return;
+        }
+        
+        const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+        let msg = "*NOVO PEDIDO (Sabor & Arte)*\n\n";
+        
+        if (usuarioLogado) {
+            msg += `*Cliente:* ${usuarioLogado.nome}\n`;
+            msg += `*WhatsApp:* ${usuarioLogado.whatsapp}\n`;
+            
+            // Puxa os dados de endereço atualizados dinamicamente do perfil do usuário
+            if (usuarioLogado.endereco) {
+                msg += `*Endereço:* ${usuarioLogado.endereco}\n`;
+                msg += `*Bairro:* ${usuarioLogado.bairro || 'Não informado'}\n`;
+                msg += `*Cidade:* ${usuarioLogado.cidade || 'Não informado'}\n\n`;
+            } else {
+                msg += `*Endereço:* Não cadastrado no perfil (informar abaixo)\n\n`;
+            }
+        } else {
+            msg += `*Cliente:* Não logado / Identificar no chat\n\n`;
+        }
+
+        msg += "*Itens do Pedido:*\n";
+        cart.forEach(i => msg += `• ${i.quantidade}x ${i.nome} (R$ ${(i.preco * i.quantidade).toFixed(2)})\n`);
+        
+        msg += `\n*Total:* ${document.getElementById('cart-total').innerText}`;
+        
+        window.open(`https://wa.me/5531993013900?text=${encodeURIComponent(msg)}`, '_blank');
     });
 
+    // Inicialização das funções ao carregar a página
     updateCartUI();
+    checarUsuario();
 </script>
 </body>
 </html>

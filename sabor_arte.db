@@ -1,4 +1,4 @@
-USE sabor_arte;
+USE acaizero;
 
 -- Garante que a tabela tenha os nomes que o PHP vai usar
 CREATE TABLE IF NOT EXISTS usuarios (
