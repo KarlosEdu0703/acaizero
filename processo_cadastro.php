@@ -6,9 +6,9 @@ header('Content-Type: application/json'); // Avisa que a resposta será em JSON
 $dados = json_decode(file_get_contents("php://input"));
 
 if ($dados) {
-    $nome = $dados->nome;
-    $email = $dados->email;
-    $whatsapp = $dados->whatsapp;
+    $nome = trim($dados->nome);
+    $email = trim($dados->email);
+    $whatsapp = trim($dados->whatsapp);
     $senha = password_hash($dados->senha, PASSWORD_DEFAULT);
 
     try {

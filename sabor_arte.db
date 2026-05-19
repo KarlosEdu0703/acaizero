@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `endereco` VARCHAR(255) DEFAULT NULL,
   `bairro` VARCHAR(100) DEFAULT NULL,
   `cidade` VARCHAR(100) DEFAULT NULL,
-  `foto` LONGTEXT DEFAULT NULL, -- Campo preparado para armazenar a foto personalizada (Base64 ou URL)
+  `foto` LONGTEXT DEFAULT NULL, -- Campo preparado para armazenar a foto personalizada (Base64)
   `criado_em` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
