@@ -79,43 +79,56 @@
             return;
         }
         
-        const novoUsuario = {
-            nome: document.getElementById('nome').value.trim(),
-            email: document.getElementById('email').value.trim().toLowerCase(),
-            whatsapp: document.getElementById('whatsapp').value.trim(),
-            senha: document.getElementById('senha').value,
-            endereco: "", 
-            bairro: "", 
-            cidade: ""
-        };
+        // Captura os dados digitados
+        const nomeDigitado = document.getElementById('nome').value.trim();
+        const emailDigitado = document.getElementById('email').value.trim().toLowerCase();
+        const whatsappDigitado = document.getElementById('whatsapp').value.trim();
+        const senhaDigitada = document.getElementById('senha').value;
 
-        let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+        // Cria o pacote de dados para enviar para o PHP
+        const dadosFormulario = new FormData();
+        dadosFormulario.append('nome', nomeDigitado);
+        dadosFormulario.append('email', emailDigitado);
+        dadosFormulario.append('whatsapp', whatsappDigitado);
+        dadosFormulario.append('senha', senhaDigitada);
 
-        // TRAVA 4: UNIQUE KEY (Garante que o e-mail não seja duplicado na lista)
-        if (usuarios.some(u => u.email === novoUsuario.email)) {
-            Swal.fire({ 
-                icon: 'error', 
-                title: 'Erro', 
-                text: 'Este e-mail já está cadastrado!' 
-            });
-            btnSubmit.disabled = false; 
-            return;
-        }
+        // Conecta com o backend para salvar no Banco de Dados Novo
+        fetch('processa_cadastro.php', {
+            method: 'POST',
+            body: dadosFormulario
+        })
+        .then(resposta => resposta.json())
+        .then(dados => {
+            if (dados.sucesso) {
+                // Se salvou no MySQL com sucesso, sincroniza o front de forma limpa:
+                const sessionUser = {
+                    nome: nomeDigitado,
+                    email: emailDigitado,
+                    whatsapp: whatsappDigitado,
+                    endereco: "", bairro: "", cidade: ""
+                };
+                localStorage.setItem('usuario_logado', JSON.stringify(sessionUser));
 
-        // Registra e Loga o usuário
-        usuarios.push(novoUsuario);
-        localStorage.setItem('usuarios', JSON.stringify(usuarios));
-        localStorage.setItem('usuario_logado', JSON.stringify(novoUsuario));
+                document.getElementById('registerForm').reset();
 
-        document.getElementById('registerForm').reset();
-
-        Swal.fire({
-            icon: 'success',
-            title: 'Cadastro Realizado!',
-            text: `Bem-vindo, ${novoUsuario.nome.split(' ')[0]}!`,
-            showConfirmButton: false,
-            timer: 2000,
-            didClose: () => { window.location.href = 'index.html'; }
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Cadastro Realizado!',
+                    text: dados.mensagem,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    didClose: () => { window.location.href = 'index.html'; }
+                });
+            } else {
+                // TRAVA 4 integrada: Mostra o erro retornado pelo banco (ex: E-mail duplicado)
+                Swal.fire({ icon: 'error', title: 'Erro no Cadastro', text: dados.mensagem });
+                btnSubmit.disabled = false;
+            }
+        })
+        .catch(erro => {
+            console.error('Erro de rede:', erro);
+            Swal.fire({ icon: 'error', title: 'Ops!', text: 'Erro ao conectar com o servidor.' });
+            btnSubmit.disabled = false;
         });
     });
 </script>
