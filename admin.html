@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Vendedor | Sabor & Arte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f4f6f9; }
+        .navbar-admin { background-color: #1a1a1a; color: white; }
+        .status-select { font-weight: bold; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-admin p-3 shadow-sm mb-4">
+    <div class="container-fluid d-flex justify-content-between">
+        <span class="navbar-brand mb-0 h1 text-white"><i class="fas fa-store me-2"></i>Sabor & Arte - Gestão de Pedidos</span>
+        <a href="index.html" class="btn btn-outline-light btn-sm">Ver Loja</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+        <h4 class="fw-bold mb-4">Todos os Pedidos</h4>
+        
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nº Pedido</th>
+                        <th>Data/Hora</th>
+                        <th>Cliente (WhatsApp)</th>
+                        <th>Total</th>
+                        <th>Ação / Status</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-admin-pedidos">
+                    <tr><td colspan="5" class="text-center">Carregando pedidos...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', carregarTodosPedidos);
+
+    async function carregarTodosPedidos() {
+        const tbody = document.getElementById('lista-admin-pedidos');
+        try {
+            const resposta = await fetch('buscar_todos_pedidos.php');
+            const resultado = await resposta.json();
+
+            if (resultado.status === 'sucesso') {
+                if(resultado.pedidos.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum pedido recebido ainda.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = resultado.pedidos.map(p => {
+                    const dataBanco = new Date(p.data_pedido);
+                    const dataFormatada = dataBanco.toLocaleDateString('pt-BR') + ' às ' + dataBanco.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+                    const totalFormatado = parseFloat(p.total).toFixed(2).replace('.', ',');
+
+                    // Define as opções do seletor e já deixa marcada a que está no banco
+                    return `
+                        <tr>
+                            <td class="fw-bold">#${p.id}</td>
+                            <td class="small">${dataFormatada}</td>
+                            <td>
+                                <strong>${p.cliente}</strong><br>
+                                <small class="text-muted"><i class="fab fa-whatsapp text-success me-1"></i>${p.whatsapp}</small>
+                            </td>
+                            <td class="fw-bold text-success">R$ ${totalFormatado}</td>
+                            <td>
+                                <select class="form-select status-select shadow-sm" onchange="alterarStatus(${p.id}, this.value)">
+                                    <option value="Pendente" ${p.status === 'Pendente' ? 'selected' : ''}>⏳ Pendente</option>
+                                    <option value="Preparando" ${p.status === 'Preparando' ? 'selected' : ''}>🍳 Preparando</option>
+                                    <option value="Entregue" ${p.status === 'Entregue' ? 'selected' : ''}>✅ Entregue / Pago</option>
+                                    <option value="Cancelado" ${p.status === 'Cancelado' ? 'selected' : ''}>❌ Cancelado</option>
+                                </select>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        } catch (erro) {
+            console.error(erro);
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Erro ao carregar os pedidos.</td></tr>';
+        }
+    }
+
+    async function alterarStatus(idPedido, novoStatus) {
+        try {
+            const resposta = await fetch('atualizar_status.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pedido_id: idPedido, novo_status: novoStatus })
+            });
+            const resultado = await resposta.json();
+
+            if (resultado.status === 'sucesso') {
+                Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Status atualizado!', showConfirmButton: false, timer: 1500 });
+            } else {
+                Swal.fire({ icon: 'error', title: 'Erro', text: resultado.mensagem });
+            }
+        } catch (erro) {
+            Swal.fire({ icon: 'error', title: 'Falha', text: 'Não foi possível conectar ao servidor.' });
+        }
+    }
+</script>
+</body>
+</html>

@@ -5,49 +5,198 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sabor & Arte | Açaí, Burgers e Porções</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-color: #6a1b9a;
+            --primary-color: #511281; /* Roxo profundo e sofisticado */
+            --primary-light: #7b2cbf;
             --secondary-color: #ffca28;
-            --dark-bg: #1a1a1a;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --dark-bg: #121212;
+            --text-dark: #2b2b2b;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; scroll-behavior: smooth; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #fcfcfc; 
+            color: var(--text-dark);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
 
-        /* Navbar Integrada */
-        .navbar { background-color: rgba(255, 255, 255, 0.95) !important; backdrop-filter: blur(10px); box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
-        .navbar-brand { font-weight: 800; color: var(--primary-color) !important; letter-spacing: -1px; }
+        h1, h2, h3, h4, h5, .fw-bold, .btn, .navbar-brand {
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        /* Navbar com Efeito Vidro (Glassmorphism) */
+        .navbar { 
+            background: rgba(255, 255, 255, 0.85) !important; 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02); 
+            padding: 15px 0;
+        }
+        .navbar-brand { font-weight: 800; color: var(--primary-color) !important; letter-spacing: -0.5px; }
         
-        .cart-badge { background-color: var(--secondary-color); color: #000; font-weight: 800; border-radius: 50px; padding: 2px 8px; font-size: 0.7rem; position: absolute; top: -5px; right: -10px; border: 2px solid white; }
-
-        .btn-profile { background-color: #f0f0f0; border-radius: 50px; padding: 8px 20px; color: #333; text-decoration: none; font-weight: 600; transition: var(--transition); border: none; }
-        .btn-profile:hover { background-color: var(--primary-color); color: white; }
-
-        /* Hero Section */
-        .hero-section { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1594179047519-f347310d3322?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; padding: 100px 0; }
-
-        /* Cards */
-        .product-card { transition: var(--transition); border-radius: 15px; overflow: hidden; border: none; }
-        .product-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important; }
-        .card-img-top { height: 220px; object-fit: cover; }
+        /* Ajuste do Ícone da Pizza para ser Roxo */
+        .navbar-brand i {
+            color: var(--primary-color) !important;
+        }
         
-        .filter-btn.active { background-color: var(--primary-color) !important; color: white !important; border-color: var(--primary-color) !important; }
-        .quantity-control { display: flex; align-items: center; gap: 10px; background: #f8f9fa; border-radius: 8px; padding: 4px; }
+        .nav-link {
+            font-weight: 500;
+            color: #555 !important;
+            transition: var(--transition);
+        }
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .cart-badge { 
+            background-color: var(--secondary-color); 
+            color: #000; 
+            font-weight: 800; 
+            border-radius: 50px; 
+            padding: 2px 8px; 
+            font-size: 0.7rem; 
+            position: absolute; 
+            top: -5px; 
+            right: -10px; 
+            border: 2px solid white; 
+        }
+
+        .btn-profile { 
+            background-color: #f4f4f4; 
+            border-radius: 14px; 
+            padding: 10px 24px; 
+            color: #333; 
+            text-decoration: none; 
+            font-weight: 600; 
+            transition: var(--transition); 
+            border: none; 
+        }
+        .btn-profile:hover { 
+            background-color: var(--primary-color); 
+            color: white !important; 
+            box-shadow: 0 8px 20px rgba(81, 18, 129, 0.2);
+        }
+
+        /* Hero Section Refinada com Parallax */
+        .hero-section { 
+            background: linear-gradient(to bottom, rgba(18, 18, 18, 0.4), rgba(18, 18, 18, 0.75)), url('https://images.unsplash.com/photo-1594179047519-f347310d3322?q=80&w=2070&auto=format&fit=crop'); 
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed;
+            padding: 150px 0 120px 0; 
+        }
+
+        /* Filtros Estilo Pílula Moderna */
+        .btn-group .filter-btn {
+            border: 1px solid #e2e8f0;
+            border-radius: 30px !important;
+            margin: 0 4px 8px 4px;
+            padding: 8px 22px;
+            color: #555;
+            font-weight: 500;
+            background: white;
+            transition: var(--transition);
+        }
+        .btn-group .filter-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: rgba(81, 18, 129, 0.05);
+        }
+        .filter-btn.active { 
+            background-color: var(--primary-color) !important; 
+            color: white !important;
+            border-color: var(--primary-color) !important; 
+            box-shadow: 0 8px 20px rgba(81, 18, 129, 0.25);
+        }
+
+        /* Cards Soft UI com Zoom Dinâmico */
+        .product-card { 
+            transition: var(--transition); 
+            border-radius: 24px; 
+            overflow: hidden; 
+            border: 1px solid rgba(0,0,0,0.02); 
+            background: #ffffff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03) !important;
+        }
+        .product-card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 20px 40px rgba(81, 18, 129, 0.12) !important; 
+        }
+        .img-container {
+            overflow: hidden;
+            position: relative;
+        }
+        .card-img-top { 
+            height: 230px; 
+            object-fit: cover; 
+            transition: var(--transition);
+        }
+        .product-card:hover .card-img-top {
+            transform: scale(1.06);
+        }
+        
+        .quantity-control { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            background: #f1f5f9; 
+            border-radius: 10px; 
+            padding: 6px; 
+        }
+        .quantity-control button {
+            background: white;
+            border: none;
+            border-radius: 6px;
+            width: 28px;
+            height: 28px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Badges e Botões de Ação */
+        .badge {
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+        .btn-add-cart {
+            border-radius: 14px;
+            padding: 12px;
+            font-weight: 700;
+            background-color: var(--primary-color);
+            border: none;
+            transition: var(--transition);
+            box-shadow: 0 6px 15px rgba(81, 18, 129, 0.15);
+        }
+        .btn-add-cart:hover {
+            background-color: var(--primary-light);
+            box-shadow: 0 8px 20px rgba(123, 44, 191, 0.35);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light sticky-top">
     <div class="container">
-        <a class="navbar-brand" href="index.html"><i class="fas fa-ice-cream me-2"></i>SABOR & ARTE</a>
+        <a class="navbar-brand" href="index.html"><i class="fas fa-pizza-slice me-2"></i>SABOR & ARTE</a>
         
         <div class="d-flex align-items-center order-lg-3">
-            <a class="nav-link px-3 position-relative me-3" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
+            <a class="nav-link px-3 position-relative me-3 text-dark" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
                 <i class="fas fa-shopping-basket fa-lg"></i>
                 <span class="cart-badge" id="cart-count">0</span>
             </a>
@@ -59,12 +208,12 @@
             </div>
         </div>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto card-text">
                 <li class="nav-item"><a class="nav-link px-3" href="#cardapio">Cardápio</a></li>
                 <li class="nav-item" id="menu-cadastro"><a class="nav-link px-3" href="cadastro.html">Cadastrar</a></li>
             </ul>
@@ -73,31 +222,33 @@
 </nav>
 
 <header class="hero-section text-white text-center">
-    <div class="container">
+    <div class="container" data-aos="zoom-out" data-aos-duration="1000">
         <h1 class="display-3 fw-bold mb-3">O Melhor Sabor da Região</h1>
-        <p class="lead mb-4 fs-4">Hambúrgueres artesanais, porções e açaís feitos com amor.</p>
-        <a href="#cardapio" class="btn btn-warning btn-lg fw-bold px-5 py-3 shadow">QUERO PEDIR AGORA</a>
+        <p class="lead mb-4 fs-4 text-light">Hambúrgueres artesanais, porções e açaís feitos com amor.</p>
+        <a href="#cardapio" class="btn btn-warning btn-lg fw-bold px-5 py-3 shadow border-0 rounded-pill">QUERO PEDIR AGORA</a>
     </div>
 </header>
 
 <main class="container my-5" id="cardapio">
-    <div class="text-center mb-5">
+    <div class="text-center mb-5" data-aos="fade-up">
         <h2 class="fw-bold display-6">Nosso Cardápio</h2>
-        <div class="btn-group mt-3 flex-wrap" role="group">
-            <button type="button" class="btn btn-outline-dark filter-btn active" data-filter="all">Tudo</button>
-            <button type="button" class="btn btn-outline-dark filter-btn" data-filter="burger">Burgers</button>
-            <button type="button" class="btn btn-outline-dark filter-btn" data-filter="acai">Açaí</button>
-            <button type="button" class="btn btn-outline-dark filter-btn" data-filter="combo">Combos</button>
-            <button type="button" class="btn btn-outline-dark filter-btn" data-filter="porcao">Porções</button>
+        <div class="btn-group mt-3 flex-wrap d-inline-flex" role="group">
+            <button type="button" class="btn filter-btn active" data-filter="all">✨ Tudo</button>
+            <button type="button" class="btn filter-btn" data-filter="burger">🍔 Burgers</button>
+            <button type="button" class="btn filter-btn" data-filter="acai">🍧 Açaí</button>
+            <button type="button" class="btn filter-btn" data-filter="combo">🚀 Combos</button>
+            <button type="button" class="btn filter-btn" data-filter="porcao">🍟 Porções</button>
         </div>
     </div>
 
     <div class="row g-4" id="products-grid">
         
-        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="burger">
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="burger" data-aos="fade-up">
             <div class="card h-100 shadow-sm product-card">
-                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500" class="card-img-top" alt="Monster Burger">
-                <div class="card-body d-flex flex-column">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500" class="card-img-top" alt="Monster Burger">
+                </div>
+                <div class="card-body d-flex flex-column p-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-warning text-dark">Artesanal</span>
                         <span class="h5 mb-0 fw-bold text-primary">R$ 32,90</span>
@@ -109,10 +260,12 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="burger">
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="burger" data-aos="fade-up">
             <div class="card h-100 shadow-sm product-card">
-                <img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?q=80&w=1068&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Classic Smash">
-                <div class="card-body d-flex flex-column">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?q=80&w=1068&auto=format&fit=crop" class="card-img-top" alt="Classic Smash">
+                </div>
+                <div class="card-body d-flex flex-column p-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-warning text-dark">Clássico</span>
                         <span class="h5 mb-0 fw-bold text-primary">R$ 22,90</span>
@@ -124,10 +277,12 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="burger">
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="burger" data-aos="fade-up">
             <div class="card h-100 shadow-sm product-card">
-                <img src="https://images.unsplash.com/photo-1610440042657-612c34d95e9f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Bacon Lover">
-                <div class="card-body d-flex flex-column">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1610440042657-612c34d95e9f?q=80&w=687&auto=format&fit=crop" class="card-img-top" alt="Bacon Lover">
+                </div>
+                <div class="card-body d-flex flex-column p-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-warning text-dark">Mais Vendido</span>
                         <span class="h5 mb-0 fw-bold text-primary">R$ 28,90</span>
@@ -139,10 +294,12 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="porcao">
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="porcao" data-aos="fade-up">
             <div class="card h-100 shadow-sm product-card">
-                <img src="https://images.unsplash.com/photo-1608219994488-cc269412b3e4?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Batata Frita Tradicional">
-                <div class="card-body d-flex flex-column">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1608219994488-cc269412b3e4?q=80&w=687&auto=format&fit=crop" class="card-img-top" alt="Batata Frita Tradicional">
+                </div>
+                <div class="card-body d-flex flex-column p-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-success text-white">Crocante</span>
                         <span class="h5 mb-0 fw-bold text-primary">R$ 15,00</span>
@@ -154,10 +311,12 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="porcao">
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="porcao" data-aos="fade-up">
             <div class="card h-100 shadow-sm product-card">
-                <img src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?q=80&w=500" class="card-img-top" alt="Batata com Cheddar e Bacon">
-                <div class="card-body d-flex flex-column">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?q=80&w=500" class="card-img-top" alt="Batata com Cheddar e Bacon">
+                </div>
+                <div class="card-body d-flex flex-column p-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-warning text-dark">Especial</span>
                         <span class="h5 mb-0 fw-bold text-primary">R$ 28,90</span>
@@ -169,10 +328,12 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="porcao">
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="porcao" data-aos="fade-up">
             <div class="card h-100 shadow-sm product-card">
-                <img src="https://images.unsplash.com/photo-1630825533949-74f62f54553a?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Anéis de Cebola">
-                <div class="card-body d-flex flex-column">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1630825533949-74f62f54553a?q=80&w=687&auto=format&fit=crop" class="card-img-top" alt="Anéis de Cebola">
+                </div>
+                <div class="card-body d-flex flex-column p-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-danger text-white">Novo</span>
                         <span class="h5 mb-0 fw-bold text-primary">R$ 20,00</span>
@@ -184,10 +345,12 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="acai">
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="acai" data-aos="fade-up">
             <div class="card h-100 shadow-sm product-card">
-                <img src="https://images.unsplash.com/photo-1684403620650-81dc661a69db?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Açaí Premium">
-                <div class="card-body d-flex flex-column">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1684403620650-81dc661a69db?q=80&w=687&auto=format&fit=crop" class="card-img-top" alt="Açaí Premium">
+                </div>
+                <div class="card-body d-flex flex-column p-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-info text-white">Energético</span>
                         <span class="h5 mb-0 fw-bold text-primary">R$ 25,00</span>
@@ -199,10 +362,12 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="acai">
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="acai" data-aos="fade-up">
             <div class="card h-100 shadow-sm product-card">
-                <img src="https://images.unsplash.com/photo-1494597564530-871f2b93ac55?q=80&w=500" class="card-img-top" alt="Açaí Tropical">
-                <div class="card-body d-flex flex-column">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1494597564530-871f2b93ac55?q=80&w=500" class="card-img-top" alt="Açaí Tropical">
+                </div>
+                <div class="card-body d-flex flex-column p-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-info text-white">Refrescante</span>
                         <span class="h5 mb-0 fw-bold text-primary">R$ 18,00</span>
@@ -214,10 +379,12 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="acai">
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="acai" data-aos="fade-up">
             <div class="card h-100 shadow-sm product-card">
-                <img src="https://static-images.ifood.com.br/image/upload/t_high/pratos/fdf03a73-04a1-4078-86be-e9f8c801f357/202111022213_UKF2_i.jpg" class="card-img-top" alt="Barca de Açaí">
-                <div class="card-body d-flex flex-column">
+                <div class="img-container">
+                    <img src="https://static-images.ifood.com.br/image/upload/t_high/pratos/fdf03a73-04a1-4078-86be-e9f8c801f357/202111022213_UKF2_i.jpg" class="card-img-top" alt="Barca de Açaí">
+                </div>
+                <div class="card-body d-flex flex-column p-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-dark text-white">Para Dividir</span>
                         <span class="h5 mb-0 fw-bold text-primary">R$ 45,00</span>
@@ -229,10 +396,12 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="combo">
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="combo" data-aos="fade-up">
             <div class="card h-100 shadow-sm product-card">
-                <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=500" class="card-img-top" alt="Combo Casal">
-                <div class="card-body d-flex flex-column">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=500" class="card-img-top" alt="Combo Casal">
+                </div>
+                <div class="card-body d-flex flex-column p-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-danger text-white">Promoção</span>
                         <span class="h5 mb-0 fw-bold text-primary">R$ 65,90</span>
@@ -244,10 +413,12 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="combo">
+        <div class="col-12 col-md-6 col-lg-4 product-item" data-category="combo" data-aos="fade-up">
             <div class="card h-100 shadow-sm product-card">
-                <img src="https://images.unsplash.com/photo-1610440042657-612c34d95e9f?q=80&w=500" class="card-img-top" alt="Combo Monstrão">
-                <div class="card-body d-flex flex-column">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1610440042657-612c34d95e9f?q=80&w=500" class="card-img-top" alt="Combo Monstrão">
+                </div>
+                <div class="card-body d-flex flex-column p-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="badge bg-danger text-white">Promoção</span>
                         <span class="h5 mb-0 fw-bold text-primary">R$ 48,00</span>
@@ -264,20 +435,20 @@
 
 <div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title fw-bold">Seu Pedido</h5>
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 24px; overflow:hidden;">
+            <div class="modal-header border-0 bg-primary text-white p-4">
+                <h5 class="modal-title fw-bold"><i class="fas fa-shopping-basket me-2"></i>Seu Pedido</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
                 <div id="cart-items" class="mb-3"></div>
-                <div class="d-flex justify-content-between border-top pt-3">
-                    <span class="h4 fw-bold">Total:</span>
-                    <span class="h4 fw-bold text-success" id="cart-total">R$ 0,00</span>
+                <div class="d-flex justify-content-between border-top pt-3 align-items-center">
+                    <span class="h4 fw-bold mb-0">Total:</span>
+                    <span class="h3 fw-bold text-success mb-0" id="cart-total">R$ 0,00</span>
                 </div>
             </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-primary w-100 fw-bold py-3" id="checkout-btn">Finalizar via WhatsApp</button>
+            <div class="modal-footer border-0 p-4 pt-0">
+                <button type="button" class="btn btn-primary w-100 fw-bold py-3" id="checkout-btn" style="border-radius:14px; font-size:1rem;">Finalizar via WhatsApp</button>
             </div>
         </div>
     </div>
@@ -285,8 +456,16 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 <script>
+    // Inicializa as animações controladas pelo Scroll
+    AOS.init({
+        duration: 800,
+        once: true,
+        offset: 60
+    });
+
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     function updateCartUI() {
@@ -299,16 +478,16 @@
         let total = 0;
 
         if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<p class="text-center text-muted">Carrinho vazio</p>';
+            cartItemsContainer.innerHTML = '<p class="text-center text-muted my-3">Seu carrinho está vazio.</p>';
         } else {
             cart.forEach(item => {
                 total += item.preco * item.quantidade;
                 cartItemsContainer.innerHTML += `
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div><h6 class="mb-0 fw-bold">${item.nome}</h6><small>R$ ${item.preco.toFixed(2).replace('.', ',')}</small></div>
+                        <div><h6 class="mb-0 fw-bold">${item.nome}</h6><small class="text-muted">R$ ${item.preco.toFixed(2).replace('.', ',')}</small></div>
                         <div class="quantity-control">
                             <button class="btn btn-sm" onclick="changeQty('${item.id}', -1)">-</button>
-                            <span>${item.quantidade}</span>
+                            <span class="fw-bold">${item.quantidade}</span>
                             <button class="btn btn-sm" onclick="changeQty('${item.id}', 1)">+</button>
                         </div>
                     </div>`;
@@ -322,7 +501,7 @@
         const item = cart.find(i => i.id === product.id);
         if (item) item.quantidade++; else cart.push(product);
         updateCartUI();
-        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Adicionado!', showConfirmButton: false, timer: 1000 });
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Adicionado ao carrinho!', showConfirmButton: false, timer: 1000 });
     }
 
     function changeQty(id, delta) {
@@ -341,7 +520,7 @@
         }
     });
 
-    // Filtros do Cardápio
+    // Filtros Funcionais do Cardápio
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelector('.filter-btn.active').classList.remove('active');
@@ -353,74 +532,141 @@
         });
     });
 
-    // CONTROLE DE SESSÃO DO UTILIZADOR
+    // CONTROLE DE SESSÃO DO UTILIZADOR (SUPER ROBUSTO)
     function checarUsuario() {
         const userArea = document.getElementById('user-area');
         const menuCadastro = document.getElementById('menu-cadastro');
-        const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+        
+        let usuarioLogado = null;
+        try {
+            const cacheData = localStorage.getItem('usuario_logado');
+            if (cacheData) {
+                usuarioLogado = JSON.parse(cacheData);
+            }
+
+            if (usuarioLogado && (!usuarioLogado.id || !usuarioLogado.nome)) {
+                console.warn("Sessão antiga detectada. Limpando cache...");
+                localStorage.removeItem('usuario_logado');
+                usuarioLogado = null;
+            }
+        } catch(e) {
+            console.error("Erro ao ler cache de usuário:", e);
+            localStorage.removeItem('usuario_logado');
+            usuarioLogado = null;
+        }
 
         if (usuarioLogado) {
             if (menuCadastro) menuCadastro.style.display = 'none';
 
             const primeiroNome = usuarioLogado.nome.split(' ')[0];
-            const urlAvatar = usuarioLogado.foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(usuarioLogado.nome)}&background=6a1b9a&color=fff`;
+            const urlAvatar = usuarioLogado.foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(usuarioLogado.nome)}&background=511281&color=fff`;
 
             userArea.innerHTML = `
                 <div class="dropdown">
-                    <button class="btn-profile dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+                    <button class="btn-profile dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border:none;">
                         <img src="${urlAvatar}" class="rounded-circle me-2" width="24" height="24" style="object-fit: cover;">
                         Olá, ${primeiroNome}
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow mt-2">
-                        <li><a class="dropdown-item" href="perfil.html"><i class="fas fa-user-circle me-2 text-muted"></i>Meu Perfil</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow mt-2" style="border-radius:14px;">
+                        <li><a class="dropdown-item p-2 px-3" href="perfil.html"><i class="fas fa-user-circle me-2 text-muted"></i>Meu Perfil</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+                        <li><a class="dropdown-item text-danger p-2 px-3" href="#" onclick="logout(event)"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
                     </ul>
                 </div>
             `;
         } else {
             if (menuCadastro) menuCadastro.style.display = 'block';
+            userArea.innerHTML = `
+                <a href="login.html" class="btn-profile text-decoration-none">
+                    <i class="fas fa-user-circle me-2"></i>Entrar
+                </a>
+            `;
         }
     }
 
-    function logout() {
+    function logout(event) {
+        if (event) event.preventDefault();
         localStorage.removeItem('usuario_logado');
         window.location.reload();
     }
 
-    // CHECKOUT VIA WHATSAPP
-    document.getElementById('checkout-btn').addEventListener('click', () => {
+    // CHECKOUT VIA WHATSAPP E BANCO DE DADOS
+    document.getElementById('checkout-btn').addEventListener('click', async () => {
         if(cart.length === 0) {
             Swal.fire({ icon: 'warning', title: 'Carrinho Vazio', text: 'Adicione itens antes de finalizar!' });
             return;
         }
         
         const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
-        let msg = "*NOVO PEDIDO (Sabor & Arte)*\n\n";
         
-        if (usuarioLogado) {
-            msg += `*Cliente:* ${usuarioLogado.nome}\n`;
-            msg += `*WhatsApp:* ${usuarioLogado.whatsapp}\n`;
-            
-            if (usuarioLogado.endereco) {
-                msg += `*Endereço:* ${usuarioLogado.endereco}\n`;
-                msg += `*Bairro:* ${usuarioLogado.bairro || 'Não informado'}\n`;
-                msg += `*Cidade:* ${usuarioLogado.cidade || 'Não informado'}\n\n`;
-            } else {
-                msg += `*Endereço:* Não cadastrado no perfil (informar abaixo)\n\n`;
-            }
-        } else {
-            msg += `*Cliente:* Não logado / Identificar no chat\n\n`;
+        if (!usuarioLogado || !usuarioLogado.id) {
+            Swal.fire({ 
+                icon: 'info', 
+                title: 'Quase lá!', 
+                text: 'Você precisa entrar na sua conta para finalizar o pedido.' 
+            }).then(() => { window.location.href = 'login.html'; });
+            return;
         }
 
-        msg += "*Itens do Pedido:*\n";
-        cart.forEach(i => msg += `• ${i.quantidade}x ${i.nome} (R$ ${(i.preco * i.quantidade).toFixed(2).replace('.', ',')})\n`);
-        
-        msg += `\n*Total:* ${document.getElementById('cart-total').innerText}`;
-        
-        window.open(`https://wa.me/5531993013900?text=${encodeURIComponent(msg)}`, '_blank');
+        let totalPedido = cart.reduce((acc, item) => acc + (item.preco * item.quantidade), 0);
+
+        const dadosPedido = {
+            usuario_id: usuarioLogado.id,
+            total: totalPedido,
+            itens: cart
+        };
+
+        const btnCheckout = document.getElementById('checkout-btn');
+        const textoOriginal = btnCheckout.innerText;
+        btnCheckout.disabled = true;
+        btnCheckout.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>PROCESSANDO...';
+
+        try {
+            const resposta = await fetch('processo_pedido.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dadosPedido)
+            });
+
+            const resultado = await resposta.json();
+
+            if (resultado.status === 'sucesso') {
+                let msg = "*NOVO PEDIDO (Sabor & Arte)*\n\n";
+                msg += `*Cliente:* ${usuarioLogado.nome}\n`;
+                msg += `*WhatsApp:* ${usuarioLogado.whatsapp}\n`;
+                
+                if (usuarioLogado.endereco) {
+                    msg += `*Endereço:* ${usuarioLogado.endereco}\n`;
+                    msg += `*Bairro:* ${usuarioLogado.bairro || 'Não informado'}\n`;
+                    msg += `*Cidade:* ${usuarioLogado.cidade || 'Não informado'}\n\n`;
+                } else {
+                    msg += `*Endereço:* Retirada no balcão\n\n`;
+                }
+
+                msg += "*Itens do Pedido:*\n";
+                cart.forEach(i => msg += `• ${i.quantidade}x ${i.nome} (R$ ${(i.preco * i.quantidade).toFixed(2).replace('.', ',')})\n`);
+                msg += `\n*Total:* R$ ${totalPedido.toFixed(2).replace('.', ',')}`;
+                
+                cart = [];
+                updateCartUI();
+                
+                const modalCart = bootstrap.Modal.getInstance(document.getElementById('cartModal'));
+                if (modalCart) modalCart.hide();
+
+                window.open(`https://wa.me/5531993013900?text=${encodeURIComponent(msg)}`, '_blank');
+            } else {
+                Swal.fire({ icon: 'error', title: 'Erro', text: resultado.mensagem });
+            }
+        } catch (erro) {
+            console.error(erro);
+            Swal.fire({ icon: 'error', title: 'Erro de Conexão', text: 'Não foi possível registrar o pedido no sistema.' });
+        } finally {
+            btnCheckout.disabled = false;
+            btnCheckout.innerText = textoOriginal;
+        }
     });
 
+    // Inicializações
     updateCartUI();
     checarUsuario();
 </script>

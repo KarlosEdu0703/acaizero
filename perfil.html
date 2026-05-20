@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,264 +9,458 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #6a1b9a; --bg: #f8f9fa; --transition: all 0.3s ease; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); }
-        
-        .navbar { box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
-        .profile-card { border: none; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); background: white; }
-        
-        /* Foto de Perfil */
-        .avatar-upload { position: relative; max-width: 150px; margin: 0 auto 20px; }
-        .avatar-edit { position: absolute; right: 10px; z-index: 1; top: 10px; }
-        .avatar-edit input { display: none; }
-        .avatar-edit label {
-            display: inline-block; width: 34px; height: 34px; margin-bottom: 0; border-radius: 100%;
-            background: #FFFFFF; border: 1px solid #ddd; box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.12);
-            cursor: pointer; font-weight: normal; transition: all .2s ease-in-out; text-align: center; line-height: 34px;
+        :root {
+            --primary: #6a1b9a;
+            --bg: #f8f9fa;
+            --transition: all 0.3s ease;
         }
-        .avatar-preview { width: 150px; height: 150px; position: relative; border-radius: 100%; border: 6px solid #f8f8f8; box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.1); }
-        .avatar-preview > div { width: 100%; height: 100%; border-radius: 100%; background-size: cover; background-repeat: no-repeat; background-position: center; }
 
-        .nav-pills .nav-link { color: #555; font-weight: 600; border-radius: 12px; margin-bottom: 8px; transition: var(--transition); text-align: left; }
-        .nav-pills .nav-link.active { background-color: var(--primary) !important; color: white; }
-        .nav-link:hover:not(.active) { background-color: #eee; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+        }
 
-        .form-label { font-weight: 700; color: #666; font-size: 0.85rem; text-transform: uppercase; }
-        .form-control { border-radius: 12px; padding: 12px; border: 1px solid #e0e0e0; }
-        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 0.25rem rgba(106, 27, 154, 0.1); }
-        
-        .btn-save { background: var(--primary); color: white; border: none; border-radius: 12px; padding: 12px 30px; font-weight: 800; transition: var(--transition); }
-        .btn-save:hover { background: #4a148c; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(106, 27, 154, 0.3); }
+        .navbar {
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-card {
+            border: none;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            background: white;
+        }
+
+        /* Foto de Perfil */
+        .avatar-upload {
+            position: relative;
+            max-width: 150px;
+            margin: 0 auto 20px;
+        }
+
+        .avatar-edit {
+            position: absolute;
+            right: 10px;
+            z-index: 1;
+            top: 10px;
+        }
+
+        .avatar-edit input {
+            display: none;
+        }
+
+        .avatar-edit label {
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            margin-bottom: 0;
+            border-radius: 100%;
+            background: #FFFFFF;
+            border: 1px solid #ddd;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+            cursor: pointer;
+            font-weight: normal;
+            transition: all .2s ease-in-out;
+            text-align: center;
+            line-height: 34px;
+        }
+
+        .avatar-preview {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            border-radius: 100%;
+            border: 6px solid #f8f8f8;
+            box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar-preview>div {
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .nav-pills .nav-link {
+            color: #555;
+            font-weight: 600;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            transition: var(--transition);
+            text-align: left;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: var(--primary) !important;
+            color: white;
+        }
+
+        .nav-link:hover:not(.active) {
+            background-color: #eee;
+        }
+
+        .form-label {
+            font-weight: 700;
+            color: #666;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(106, 27, 154, 0.1);
+        }
+
+        .btn-save {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-weight: 800;
+            transition: var(--transition);
+        }
+
+        .btn-save:hover {
+            background: #4a148c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 27, 154, 0.3);
+        }
     </style>
 </head>
+
 <body>
 
-<nav class="navbar navbar-light bg-white sticky-top mb-4">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="index.html" style="color: var(--primary)">
-            <i class="fas fa-chevron-left me-2"></i> Voltar ao Cardápio
-        </a>
-    </div>
-</nav>
-
-<div class="container pb-5">
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="card profile-card p-4 text-center mb-4">
-                <div class="avatar-upload">
-                    <div class="avatar-edit">
-                        <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
-                        <label for="imageUpload"><i class="fas fa-pencil-alt text-muted"></i></label>
-                    </div>
-                    <div class="avatar-preview">
-                        <div id="imagePreview" style="background-image: url('https://ui-avatars.com/api/?name=User&background=6a1b9a&color=fff');">
-                        </div>
-                    </div>
-                </div>
-                
-                <h4 class="fw-bold mb-1" id="display-nome">Nome do Usuário</h4>
-                <p class="text-muted small mb-4" id="display-email">usuario@email.com</p>
-                
-                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-dados" type="button"><i class="fas fa-user-circle me-2"></i>Meus Dados</button>
-                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-pedidos" type="button"><i class="fas fa-history me-2"></i>Histórico de Pedidos</button>
-                    <button class="nav-link text-danger mt-3" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Encerrar Sessão</button>
-                </div>
-            </div>
+    <nav class="navbar navbar-light bg-white sticky-top mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html" style="color: var(--primary)">
+                <i class="fas fa-chevron-left me-2"></i> Voltar ao Cardápio
+            </a>
         </div>
+    </nav>
 
-        <div class="col-lg-8">
-            <div class="card profile-card p-4">
-                <div class="tab-content">
-                    
-                    <div class="tab-pane fade show active" id="tab-dados">
-                        <h5 class="fw-bold mb-4"><i class="fas fa-edit me-2 text-primary"></i>Informações da Conta</h5>
-                        <form id="perfilForm">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Nome Completo</label>
-                                    <input type="text" id="nome" class="form-control" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">WhatsApp</label>
-                                    <input type="text" id="whatsapp" class="form-control" required>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Endereço de Entrega</label>
-                                    <input type="text" id="endereco" class="form-control" placeholder="Rua, Número, Complemento">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Bairro</label>
-                                    <input type="text" id="bairro" class="form-control">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Cidade</label>
-                                    <input type="text" id="cidade" class="form-control">
-                                </div>
-                                <div class="col-12 mt-4">
-                                    <button type="submit" class="btn btn-save"><i class="fas fa-check-circle me-2"></i>SALVAR ALTERAÇÕES</button>
-                                </div>
+    <div class="container pb-5">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card profile-card p-4 text-center mb-4">
+                    <div class="avatar-upload">
+                        <div class="avatar-edit">
+                            <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                            <label for="imageUpload"><i class="fas fa-pencil-alt text-muted"></i></label>
+                        </div>
+                        <div class="avatar-preview">
+                            <div id="imagePreview"
+                                style="background-image: url('https://ui-avatars.com/api/?name=User&background=6a1b9a&color=fff');">
                             </div>
-                        </form>
-                    </div>
-
-                    <div class="tab-pane fade" id="tab-pedidos">
-                        <h5 class="fw-bold mb-4"><i class="fas fa-shopping-bag me-2 text-primary"></i>Pedidos Recentes</h5>
-                        <div class="table-responsive">
-                            <table class="table table-borderless align-middle">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th class="rounded-start">Pedido</th>
-                                        <th>Data</th>
-                                        <th>Total</th>
-                                        <th class="rounded-end text-center">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="lista-pedidos">
-                                    </tbody>
-                            </table>
                         </div>
                     </div>
 
+                    <h4 class="fw-bold mb-1" id="display-nome">Nome do Usuário</h4>
+                    <p class="text-muted small mb-4" id="display-email">usuario@email.com</p>
+
+                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-dados"
+                            type="button"><i class="fas fa-user-circle me-2"></i>Meus Dados</button>
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-pedidos" type="button"><i
+                                class="fas fa-history me-2"></i>Histórico de Pedidos</button>
+                        <button class="nav-link text-danger mt-3" onclick="logout()"><i
+                                class="fas fa-sign-out-alt me-2"></i>Encerrar Sessão</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card profile-card p-4">
+                    <div class="tab-content">
+
+                        <div class="tab-pane fade show active" id="tab-dados">
+                            <h5 class="fw-bold mb-4"><i class="fas fa-edit me-2 text-primary"></i>Informações da Conta
+                            </h5>
+                            <form id="perfilForm">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Nome Completo</label>
+                                        <input type="text" id="nome" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">WhatsApp</label>
+                                        <input type="text" id="whatsapp" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">CEP</label>
+                                        <input type="text" id="cep" class="form-control" placeholder="Apenas números"
+                                            maxlength="9">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label class="form-label">Endereço de Entrega</label>
+                                        <input type="text" id="endereco" class="form-control"
+                                            placeholder="Rua, Número, Complemento">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Bairro</label>
+                                        <input type="text" id="bairro" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Cidade</label>
+                                        <input type="text" id="cidade" class="form-control">
+                                    </div>
+                                    
+                                    <div class="col-12 mt-4">
+                                        <button type="submit" class="btn btn-save w-100">
+                                            <i class="fas fa-check-circle me-2"></i>SALVAR ALTERAÇÕES
+                                        </button>
+                                    </div>
+                                    </div>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-pedidos">
+                            <h5 class="fw-bold mb-4"><i class="fas fa-shopping-bag me-2 text-primary"></i>Pedidos
+                                Recentes</h5>
+                            <div class="table-responsive">
+                                <table class="table table-borderless align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="rounded-start">Pedido</th>
+                                            <th>Data</th>
+                                            <th>Total</th>
+                                            <th class="rounded-end text-center">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="lista-pedidos">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-    // Carrega dados do utilizador logado vindos da sessão do banco
-const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+    <script>
+        // Carrega dados do utilizador logado vindos da sessão do banco
+        const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
 
-// Se não houver nenhum utilizador com sessão ativa, redireciona para o index
-if (!usuarioLogado) { 
-    window.location.href = 'index.html'; 
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Preenche os elementos de texto do ecrã
-    document.getElementById('display-nome').innerText = usuarioLogado.nome;
-    document.getElementById('display-email').innerText = usuarioLogado.email;
-    
-    // Preenche os campos do formulário com os dados atuais da base de dados
-    document.getElementById('nome').value = usuarioLogado.nome;
-    document.getElementById('whatsapp').value = usuarioLogado.whatsapp;
-    document.getElementById('endereco').value = usuarioLogado.endereco || '';
-    document.getElementById('bairro').value = usuarioLogado.bairro || '';
-    document.getElementById('cidade').value = usuarioLogado.cidade || '';
-
-    // Carrega a foto de perfil personalizada se ela existir na base de dados
-    if (usuarioLogado.foto) {
-        document.getElementById('imagePreview').style.backgroundImage = `url(${usuarioLogado.foto})`;
-    } else {
-        document.getElementById('imagePreview').style.backgroundImage = `url('https://ui-avatars.com/api/?name=${encodeURIComponent(usuarioLogado.nome)}&background=6a1b9a&color=fff')`;
-    }
-
-    gerarPedidosFake();
-});
-
-// Lógica para detetar o Upload de Foto e conversão temporária para Base64
-document.getElementById('imageUpload').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const base64Image = event.target.result;
-            document.getElementById('imagePreview').style.backgroundImage = `url(${base64Image})`;
-            
-            // Atribui temporariamente a string da imagem ao objeto local
-            usuarioLogado.foto = base64Image;
+        // Se não houver nenhum utilizador com sessão ativa, redireciona para o index
+        if (!usuarioLogado) {
+            window.location.href = 'index.html';
         }
-        reader.readAsDataURL(file);
-    }
-});
 
-// Guardar os dados do Formulário diretamente na Base de Dados
-document.getElementById('perfilForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const btnSubmit = this.querySelector('button[type="submit"]');
-    btnSubmit.disabled = true;
-    btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>A GUARDAR...';
+        document.addEventListener('DOMContentLoaded', () => {
+            // Preenche os elementos de texto do ecrã
+            document.getElementById('display-nome').innerText = usuarioLogado.nome;
+            document.getElementById('display-email').innerText = usuarioLogado.email;
 
-    // Atualiza o objeto com as novas strings digitadas nos inputs
-    usuarioLogado.nome = document.getElementById('nome').value.trim();
-    usuarioLogado.whatsapp = document.getElementById('whatsapp').value.trim();
-    usuarioLogado.endereco = document.getElementById('endereco').value.trim();
-    usuarioLogado.bairro = document.getElementById('bairro').value.trim();
-    usuarioLogado.cidade = document.getElementById('cidade').value.trim();
+            // Preenche os campos do formulário com os dados atuais da base de dados
+            document.getElementById('nome').value = usuarioLogado.nome;
+            document.getElementById('whatsapp').value = usuarioLogado.whatsapp;
+            document.getElementById('endereco').value = usuarioLogado.endereco || '';
+            document.getElementById('bairro').value = usuarioLogado.bairro || '';
+            document.getElementById('cidade').value = usuarioLogado.cidade || '';
 
-    try {
-        // Faz o envio assíncrono para o atualizar_perfil.php
-        const resposta = await fetch('atualizar_perfil.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(usuarioLogado)
+            // Carrega a foto de perfil personalizada se ela existir na base de dados
+            if (usuarioLogado.foto) {
+                document.getElementById('imagePreview').style.backgroundImage = `url(${usuarioLogado.foto})`;
+            } else {
+                document.getElementById('imagePreview').style.backgroundImage = `url('https://ui-avatars.com/api/?name=${encodeURIComponent(usuarioLogado.nome)}&background=6a1b9a&color=fff')`;
+            }
+
+            // ALTERADO AQUI: Agora chama a função do banco real
+            carregarPedidosReais();
         });
 
-        const resultado = await resposta.json();
+        // Lógica para detetar o Upload de Foto e conversão temporária para Base64
+        document.getElementById('imageUpload').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const base64Image = event.target.result;
+                    document.getElementById('imagePreview').style.backgroundImage = `url(${base64Image})`;
 
-        if (resultado.status === 'sucesso') {
-            // Sincroniza os novos dados atualizados no localStorage do ecrã atual
-            localStorage.setItem('usuario_logado', JSON.stringify(usuarioLogado));
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Perfil Atualizado!',
-                text: 'As suas informações foram gravadas com sucesso.',
-                confirmButtonColor: '#6a1b9a'
-            }).then(() => { 
-                window.location.reload(); 
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erro',
-                text: resultado.mensagem
-            });
-            btnSubmit.disabled = false;
-            btnSubmit.innerHTML = '<i class="fas fa-check-circle me-2"></i>SALVAR ALTERAÇÕES';
-        }
-    } catch (erro) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Erro de Conexão',
-            text: 'Não foi possível estabelecer ligação com o servidor.'
+                    // Atribui temporariamente a string da imagem ao objeto local
+                    usuarioLogado.foto = base64Image;
+                }
+                reader.readAsDataURL(file);
+            }
         });
-        console.error(erro);
-        btnSubmit.disabled = false;
-        btnSubmit.innerHTML = '<i class="fas fa-check-circle me-2"></i>SALVAR ALTERAÇÕES';
+
+        // Guardar os dados do Formulário diretamente na Base de Dados
+        document.getElementById('perfilForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const btnSubmit = this.querySelector('button[type="submit"]');
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>A GUARDAR...';
+
+            // Atualiza o objeto com as novas strings digitadas nos inputs
+            usuarioLogado.nome = document.getElementById('nome').value.trim();
+            usuarioLogado.whatsapp = document.getElementById('whatsapp').value.trim();
+            usuarioLogado.endereco = document.getElementById('endereco').value.trim();
+            usuarioLogado.bairro = document.getElementById('bairro').value.trim();
+            usuarioLogado.cidade = document.getElementById('cidade').value.trim();
+
+            try {
+                // Faz o envio assíncrono para o atualizar_perfil.php
+                const resposta = await fetch('atualizar_perfil.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(usuarioLogado)
+                });
+
+                const resultado = await resposta.json();
+
+                if (resultado.status === 'sucesso') {
+                    // Sincroniza os novos dados atualizados no localStorage do ecrã atual
+                    localStorage.setItem('usuario_logado', JSON.stringify(usuarioLogado));
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Perfil Atualizado!',
+                        text: 'As suas informações foram gravadas com sucesso.',
+                        confirmButtonColor: '#6a1b9a'
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erro',
+                        text: resultado.mensagem
+                    });
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = '<i class="fas fa-check-circle me-2"></i>SALVAR ALTERAÇÕES';
+                }
+            } catch (erro) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro de Conexão',
+                    text: 'Não foi possível estabelecer ligação com o servidor.'
+                });
+                console.error(erro);
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<i class="fas fa-check-circle me-2"></i>SALVAR ALTERAÇÕES';
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('usuario_logado');
+            window.location.href = 'index.html';
+        }
+
+        // ALTERADO AQUI: Nova função que renderiza o histórico real vindo do MySQL
+        async function carregarPedidosReais() {
+            const lista = document.getElementById('lista-pedidos');
+
+            try {
+                const resposta = await fetch('buscar_pedidos.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ usuario_id: usuarioLogado.id })
+                });
+
+                const resultado = await resposta.json();
+
+                if (resultado.status === 'sucesso') {
+                    if (resultado.pedidos.length === 0) {
+                        lista.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">Você ainda não realizou nenhum pedido.</td></tr>';
+                        return;
+                    }
+
+                    lista.innerHTML = resultado.pedidos.map(p => {
+                        // Mapeia dinamicamente a cor do badge Bootstrap conforme o status do banco
+                        let corBadge = 'warning'; // Pendente
+                        if (p.status === 'Entregue') corBadge = 'success';
+                        if (p.status === 'Cancelado') corBadge = 'danger';
+                        if (p.status === 'Preparando') corBadge = 'info';
+
+                        // Trata a string de data do banco de dados (AAAA-MM-DD) para o formato brasileiro (DD/MM/AAAA)
+                        const dataBanco = new Date(p.data_pedido);
+                        const dataFormatada = dataBanco.toLocaleDateString('pt-BR');
+
+                        // Formata o valor decimal do total com vírgula para exibição monetária
+                        const totalFormatado = parseFloat(p.total).toFixed(2).replace('.', ',');
+
+                        return `
+                    <tr>
+                        <td class="fw-bold">#${p.id}</td>
+                        <td>${dataFormatada}</td>
+                        <td class="fw-bold text-primary">R$ ${totalFormatado}</td>
+                        <td class="text-center"><span class="badge bg-${corBadge}">${p.status}</span></td>
+                    </tr>
+                `;
+                    }).join('');
+                } else {
+                    lista.innerHTML = `<tr><td colspan="4" class="text-center text-danger py-4">${resultado.mensagem}</td></tr>`;
+                }
+            } catch (erro) {
+                console.error("Erro ao processar histórico:", erro);
+                lista.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-4">Não foi possível carregar seu histórico.</td></tr>';
+            }
+        }
+        // INTEGRAÇÃO COM A API DO VIACEP
+document.getElementById('cep').addEventListener('blur', async function() {
+    // Remove qualquer carácter que não seja número (ex: o traço)
+    let cepDigitado = this.value.replace(/\D/g, ''); 
+    
+    // Verifica se o CEP tem exatamente 8 números
+    if (cepDigitado.length === 8) {
+        // Dá um feedback visual para o utilizador saber que está a carregar
+        document.getElementById('endereco').value = "A procurar...";
+        document.getElementById('bairro').value = "...";
+        document.getElementById('cidade').value = "...";
+
+        try {
+            // Faz a chamada (fetch) à API pública do ViaCEP
+            const resposta = await fetch(`https://viacep.com.br/ws/${cepDigitado}/json/`);
+            const dados = await resposta.json();
+
+            // Se o ViaCEP não retornar um erro (ex: CEP inexistente)
+            if (!dados.erro) {
+                // Preenche os campos automaticamente
+                document.getElementById('endereco').value = dados.logradouro + ', ';
+                document.getElementById('bairro').value = dados.bairro;
+                document.getElementById('cidade').value = dados.localidade; // O ViaCEP chama à cidade "localidade"
+                
+                // Opcional: Coloca o cursor a piscar no endereço para o utilizador apenas escrever o número da porta
+                document.getElementById('endereco').focus();
+            } else {
+                Swal.fire({ icon: 'error', title: 'CEP Inválido', text: 'Não conseguimos encontrar este código postal.' });
+                limparCamposEndereco();
+            }
+        } catch (erro) {
+            console.error("Erro na ligação ao ViaCEP:", erro);
+            Swal.fire({ icon: 'error', title: 'Erro de Ligação', text: 'Não foi possível consultar o CEP no momento.' });
+            limparCamposEndereco();
+        }
     }
 });
 
-function logout() {
-    localStorage.removeItem('usuario_logado');
-    window.location.href = 'index.html';
+// Função auxiliar para limpar em caso de erro
+function limparCamposEndereco() {
+    document.getElementById('endereco').value = "";
+    document.getElementById('bairro').value = "";
+    document.getElementById('cidade').value = "";
 }
-
-function gerarPedidosFake() {
-    const lista = document.getElementById('lista-pedidos');
-    // Mantido estático temporariamente enquanto não integramos a tabela de pedidos
-    const pedidos = [
-        { id: '8542', data: '15/05/2026', total: 'R$ 45,90', status: 'Entregue', cor: 'success' },
-        { id: '8210', data: '10/05/2026', total: 'R$ 32,00', status: 'Cancelado', cor: 'danger' }
-    ];
-
-    lista.innerHTML = pedidos.map(p => `
-        <tr>
-            <td class="fw-bold">#${p.id}</td>
-            <td>${p.data}</td>
-            <td class="fw-bold text-primary">${p.total}</td>
-            <td class="text-center"><span class="badge bg-${p.cor}">${p.status}</span></td>
-        </tr>
-    `).join('');
-}
-</script>
+    </script>
 
 </body>
+
 </html>
