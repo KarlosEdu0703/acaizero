@@ -40,7 +40,8 @@
 
             <div class="mb-3">
                 <label class="form-label small fw-bold text-muted">WhatsApp</label>
-                <input type="tel" id="whatsapp" class="form-control" placeholder="(31) 99999-9999" required>
+                <input type="tel" id="whatsapp" class="form-control" placeholder="Ex: 31999999999" required>
+                <div class="form-text text-muted small">Insira apenas os números com o DDD (ex: 31993013900).</div>
             </div>
 
             <div class="mb-4">
@@ -60,7 +61,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-// TRAVA 1: Impede até de ver a página se já estiver logado (mantida no localStorage por enquanto)
+// Se o usuário já estiver logado, não há sentido em criar uma conta, mandamos ele para a Home
 if (localStorage.getItem('usuario_logado')) {
     window.location.href = 'index.html';
 }
@@ -70,15 +71,30 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     
     const btnSubmit = this.querySelector('button[type="submit"]');
     btnSubmit.disabled = true;
-    btnSubmit.innerText = "CADASTRANDO..."; // Dá um feedback visual
+    btnSubmit.innerText = "CADASTRANDO..."; // Feedback visual de carregamento
 
-    // Pega os dados do formulário
+    // Remove parênteses, traços e espaços do WhatsApp para enviar apenas os números puros para o banco
+    const whatsappLimpo = document.getElementById('whatsapp').value.replace(/\D/g, '');
+
+    // Pega os dados do formulário perfeitamente alinhados com o processo_cadastro.php
     const novoUsuario = {
         nome: document.getElementById('nome').value.trim(),
         email: document.getElementById('email').value.trim().toLowerCase(),
-        whatsapp: document.getElementById('whatsapp').value.trim(),
+        whatsapp: whatsappLimpo,
         senha: document.getElementById('senha').value
     };
+
+    // Validação extra no frontend para garantir que o número do WhatsApp seja válido
+    if (whatsappLimpo.length < 10) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'WhatsApp Inválido',
+            text: 'Por favor, insira o número do WhatsApp completo com DDD.'
+        });
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = "CADASTRAR CONTA";
+        return;
+    }
 
     try {
         // Envia os dados para o PHP usando fetch
@@ -93,22 +109,22 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         const resultado = await resposta.json();
 
         if (resultado.status === 'sucesso') {
-            // Se o banco salvou, mostramos o SweetAlert
+            // Se o banco salvou com sucesso, exibe mensagem festiva
             Swal.fire({
                 icon: 'success',
                 title: 'Cadastro Realizado!',
-                text: `Bem-vindo, ${novoUsuario.nome.split(' ')[0]}!`,
+                text: `Bem-vindo à Sabor & Arte! Redirecionando...`,
                 showConfirmButton: false,
                 timer: 2000,
                 didClose: () => { 
-                    window.location.href = 'login.html'; // Manda para o login após cadastrar
+                    window.location.href = 'login.html'; // Manda para o login para efetuar o primeiro acesso
                 }
             });
         } else {
-            // Se o e-mail já existir ou der erro no banco
+            // Caso caia na trava do email VIP ou email duplicado
             Swal.fire({ 
                 icon: 'error', 
-                title: 'Erro', 
+                title: 'Erro no Cadastro', 
                 text: resultado.mensagem 
             });
             btnSubmit.disabled = false;

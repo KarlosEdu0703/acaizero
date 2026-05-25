@@ -43,7 +43,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-   document.getElementById('loginForm').addEventListener('submit', async function(e) {
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const btnSubmit = this.querySelector('button[type="submit"]');
@@ -56,7 +56,7 @@
     };
 
     try {
-        // Envia os dados para o arquivo PHP que criamos
+        // Envia os dados em formato JSON para o processo_login.php
         const resposta = await fetch('processo_login.php', {
             method: 'POST',
             headers: {
@@ -68,17 +68,23 @@
         const resultado = await resposta.json();
 
         if (resultado.status === 'sucesso') {
-            // Guarda os dados do usuário logado vindo do banco no localStorage
-            // Isso garante que o arquivo perfil.html e a index saibam quem está logado
+            // Guarda os dados do usuário no localStorage (inclusive a propriedade 'tipo')
             localStorage.setItem('usuario_logado', JSON.stringify(resultado.usuario));
             
             Swal.fire({
                 icon: 'success', 
                 title: 'Login efetuado!', 
+                text: resultado.mensagem,
                 showConfirmButton: false, 
                 timer: 1500,
                 didClose: () => { 
-                    window.location.href = 'index.html'; 
+                    // ✨ MÁGICA DA SEPARAÇÃO AQUI ✨
+                    // Verifica se o servidor marcou esse usuário como admin
+                    if (resultado.tipo === 'admin') {
+                        window.location.href = 'admin.html'; // Redireciona o admin para a gestão
+                    } else {
+                        window.location.href = 'index.html'; // Redireciona o cliente comum para a loja
+                    }
                 }
             });
         } else {

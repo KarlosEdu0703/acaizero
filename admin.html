@@ -10,7 +10,13 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f4f6f9; }
         .navbar-admin { background-color: #1a1a1a; color: white; }
-        .status-select { font-weight: bold; border-radius: 8px; cursor: pointer; }
+        .status-select { font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        
+        /* Cores customizadas para destacar os status de forma elegante */
+        .status-pendente { background-color: #fff3cd !important; color: #856404 !important; border-color: #ffeeba !important; }
+        .status-preparando { background-color: #cce5ff !important; color: #004085 !important; border-color: #b8daff !important; }
+        .status-entregue { background-color: #d4edda !important; color: #155724 !important; border-color: #c3e6cb !important; }
+        .status-cancelado { background-color: #f8d7da !important; color: #721c24 !important; border-color: #f5c6cb !important; }
     </style>
 </head>
 <body>
@@ -18,13 +24,19 @@
 <nav class="navbar navbar-admin p-3 shadow-sm mb-4">
     <div class="container-fluid d-flex justify-content-between">
         <span class="navbar-brand mb-0 h1 text-white"><i class="fas fa-store me-2"></i>Sabor & Arte - Gestão de Pedidos</span>
-        <a href="index.html" class="btn btn-outline-light btn-sm">Ver Loja</a>
+        <a href="index.html" class="btn btn-outline-light btn-sm"><i class="fas fa-shopping-bag me-1"></i> Ver Loja</a>
     </div>
 </nav>
 
 <div class="container">
     <div class="card border-0 shadow-sm rounded-4 p-4">
-        <h4 class="fw-bold mb-4">Todos os Pedidos</h4>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0">
+                Todos os Pedidos 
+                <span class="badge bg-primary ms-2 fs-6" id="badge-contador">0</span>
+            </h4>
+            <span class="text-muted small"><i class="fas fa-sync fa-spin me-1 text-primary"></i> Atualizando automaticamente...</span>
+        </div>
         
         <div class="table-responsive">
             <table class="table table-hover align-middle">
@@ -47,10 +59,25 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', carregarTodosPedidos);
+    document.addEventListener('DOMContentLoaded', () => {
+        carregarTodosPedidos();
+        // Atualiza a lista sozinho a cada 10 segundos sem precisar dar F5! 🔄
+        setInterval(carregarTodosPedidos, 10000);
+    });
+
+    // Função auxiliar para definir qual classe de cor o select vai usar
+    function obterClasseStatus(status) {
+        if (status === 'Pendente') return 'status-pendente';
+        if (status === 'Preparando') return 'status-preparando';
+        if (status === 'Entregue') return 'status-entregue';
+        if (status === 'Cancelado') return 'status-cancelado';
+        return '';
+    }
 
     async function carregarTodosPedidos() {
         const tbody = document.getElementById('lista-admin-pedidos');
+        const badgeContador = document.getElementById('badge-contador');
+        
         try {
             const resposta = await fetch('buscar_todos_pedidos.php');
             const resultado = await resposta.json();
@@ -58,26 +85,35 @@
             if (resultado.status === 'sucesso') {
                 if(resultado.pedidos.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum pedido recebido ainda.</td></tr>';
+                    badgeContador.innerText = '0';
                     return;
                 }
+
+                // Atualiza o número do contador no topo com a quantidade de pedidos ativos
+                const pedidosAtivos = resultado.pedidos.filter(p => p.status === 'Pendente' || p.status === 'Preparando').length;
+                badgeContador.innerText = pedidosAtivos;
 
                 tbody.innerHTML = resultado.pedidos.map(p => {
                     const dataBanco = new Date(p.data_pedido);
                     const dataFormatada = dataBanco.toLocaleDateString('pt-BR') + ' às ' + dataBanco.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
                     const totalFormatado = parseFloat(p.total).toFixed(2).replace('.', ',');
+                    const classeCor = obterClasseStatus(p.status);
 
-                    // Define as opções do seletor e já deixa marcada a que está no banco
                     return `
                         <tr>
-                            <td class="fw-bold">#${p.id}</td>
-                            <td class="small">${dataFormatada}</td>
+                            <td class="fw-bold text-secondary">#${p.id}</td>
+                            <td class="small text-muted">${dataFormatada}</td>
                             <td>
-                                <strong>${p.cliente}</strong><br>
-                                <small class="text-muted"><i class="fab fa-whatsapp text-success me-1"></i>${p.whatsapp}</small>
+                                <strong class="text-dark">${p.cliente}</strong><br>
+                                <small class="text-muted">
+                                    <a href="https://wa.me/${p.whatsapp.replace(/\D/g, '')}" target="_blank" class="text-decoration-none text-success">
+                                        <i class="fab fa-whatsapp me-1"></i>${p.whatsapp}
+                                    </a>
+                                </small>
                             </td>
                             <td class="fw-bold text-success">R$ ${totalFormatado}</td>
                             <td>
-                                <select class="form-select status-select shadow-sm" onchange="alterarStatus(${p.id}, this.value)">
+                                <select class="form-select status-select shadow-sm ${classeCor}" onchange="alterarStatus(${p.id}, this)">
                                     <option value="Pendente" ${p.status === 'Pendente' ? 'selected' : ''}>⏳ Pendente</option>
                                     <option value="Preparando" ${p.status === 'Preparando' ? 'selected' : ''}>🍳 Preparando</option>
                                     <option value="Entregue" ${p.status === 'Entregue' ? 'selected' : ''}>✅ Entregue / Pago</option>
@@ -90,11 +126,13 @@
             }
         } catch (erro) {
             console.error(erro);
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Erro ao carregar os pedidos.</td></tr>';
+            // Removemos o alerta travando a tela aqui para não incomodar caso ocorra uma oscilação rápida na rede durante o auto-refresh
         }
     }
 
-    async function alterarStatus(idPedido, novoStatus) {
+    async function alterarStatus(idPedido, elementoSelect) {
+        const novoStatus = elementoSelect.value;
+        
         try {
             const resposta = await fetch('atualizar_status.php', {
                 method: 'POST',
@@ -105,6 +143,13 @@
 
             if (resultado.status === 'sucesso') {
                 Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Status atualizado!', showConfirmButton: false, timer: 1500 });
+                
+                // Remove as classes de cores antigas do select e aplica a nova na mesma hora!
+                elementoSelect.classList.remove('status-pendente', 'status-preparando', 'status-entregue', 'status-cancelado');
+                elementoSelect.classList.add(obterClasseStatus(novoStatus));
+                
+                // Recarrega os dados rapidamente para atualizar o contador do topo
+                carregarTodosPedidos();
             } else {
                 Swal.fire({ icon: 'error', title: 'Erro', text: resultado.mensagem });
             }
