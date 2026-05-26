@@ -259,8 +259,8 @@ try {
     <div class="container">
 
         <a class="navbar-brand" href="#">
-            <i class="fas fa-pizza-slice me-2"></i>
-            SABOR & ARTE
+            <i class="fa-solid fa-ice-cream"></i>
+            AÇAIZERO
         </a>
 
         <div class="d-flex align-items-center order-lg-3">
@@ -724,7 +724,7 @@ function checarUsuario() {
                     <li>
 
                         <a class="dropdown-item p-2 px-3"
-                           href="perfil.html">
+                          href="perfil.html">
 
                            <i class="fas fa-user-circle me-2 text-muted"></i>
                            Meu Perfil
@@ -856,14 +856,33 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.status === 'sucesso') {
+       if (data.status === 'sucesso') {
             
-            // 5. Se salvou no banco com sucesso, gera a mensagem do WhatsApp
-            let mensagem = '*NOVO PEDIDO - SABOR & ARTE*%0A%0A';
+            // 5. Se salvou no banco com sucesso, gera a mensagem linda do WhatsApp
+            let msgCompleta = `🍇 *SABOR & ARTE - NOVO PEDIDO* 🍔\n`;
+            msgCompleta += `===============================\n\n`;
+            msgCompleta += `👤 *Cliente:* ${usuarioLogado.nome}\n`;
+            msgCompleta += `📱 *WhatsApp:* ${usuarioLogado.whatsapp || 'Não informado'}\n\n`;
+            
+            msgCompleta += `📍 *ENDEREÇO DE ENTREGA:*\n`;
+            if (usuarioLogado.endereco) {
+                msgCompleta += `• *Rua:* ${usuarioLogado.endereco}\n`;
+                msgCompleta += `• *Bairro:* ${usuarioLogado.bairro || 'Não informado'}\n`;
+                msgCompleta += `• *Cidade:* ${usuarioLogado.cidade || 'Não informada'}\n\n`;
+            } else {
+                msgCompleta += `⚠️ _Endereço não cadastrado (Combinar no chat)_\n\n`;
+            }
+
+            msgCompleta += `🛒 *ITENS DO PEDIDO:*\n`;
             cart.forEach(item => {
-                mensagem += `• ${item.quantidade}x ${item.nome} - R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}%0A`;
+                const subtotalItem = (item.preco * item.quantidade).toFixed(2).replace('.', ',');
+                msgCompleta += `• *${item.quantidade}x* ${item.nome} _(R$ ${subtotalItem})_\n`;
             });
-            mensagem += `%0A*Total:* R$ ${total.toFixed(2).replace('.', ',')}`;
+            
+            msgCompleta += `\n===============================\n`;
+            msgCompleta += `💰 *TOTAL DO PEDIDO:* R$ ${total.toFixed(2).replace('.', ',')}\n`;
+            msgCompleta += `===============================\n\n`;
+            msgCompleta += `✨ _Pedido gerado automaticamente pelo site!_`;
 
             // Número de telefone do estabelecimento
             const telefone = '5531993013900';
@@ -879,8 +898,8 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
                 cart = [];
                 updateCartUI();
 
-                // Abre o WhatsApp para o cliente avisar o estabelecimento
-                window.open(`https://wa.me/${telefone}?text=${mensagem}`, '_blank');
+                // Abre o WhatsApp convertendo a mensagem perfeitamente para link
+                window.open(`https://wa.me/${telefone}?text=${encodeURIComponent(msgCompleta)}`, '_blank');
             });
 
         } else {
