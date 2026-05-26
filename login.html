@@ -6,69 +6,393 @@
     <title>Sabor & Arte | Entrar</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary-color: #6a1b9a; }
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .login-container { background: #fff; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); max-width: 450px; width: 100%; padding: 40px 30px; }
-        .btn-login { background: var(--primary-color); color: white; border: none; border-radius: 10px; padding: 14px; font-weight: 700; }
-        .btn-login:hover { background: #511378; color: white; }
+        :root { 
+            --primary-color: #6a1b9a; 
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            /* Configuração da Imagem de Fundo */
+            background-image: url('fundo.avif');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        /* GRANDE CONTAINER EM VOLTA DE TUDO COM TEXTURA E EFEITO DE VIDRO */
+        .main-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 80px;
+            width: 95%;
+            max-width: 1100px;
+            min-height: 75vh;
+            padding: 40px;
+            border-radius: 30px;
+            
+            /* Efeito de Vidro Transparente Reforçado */
+            background-color: rgba(255, 255, 255, 0.25); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            
+            /* Padrão sutil de micropontos por cima do fundo */
+            background-image: radial-gradient(rgba(106, 27, 154, 0.08) 1.5px, transparent 1.5px);
+            background-size: 16px 16px;
+            
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        /* CAIXA DE LOGIN (ESQUERDA) */
+        .login-container { 
+            background: rgba(255, 255, 255, 0.95); 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            max-width: 420px; 
+            width: 100%; 
+            padding: 40px 30px; 
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn-login { 
+            background: var(--primary-color); 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            padding: 14px; 
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .btn-login:hover { 
+            background: #511378; 
+            color: white; 
+        }
+
+        /* CONTAINER DO MASCOTE (DIREITA) */
+        .mascote-container {
+            display: none;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @media (min-width: 950px) {
+            .main-wrapper { justify-content: space-between; }
+            .mascote-container { display: flex; }
+        }
+
+        /* MASCOTE AÇAÍ GIGANTE */
+        .mascote-wrapper {
+            position: relative;
+            width: 120px;
+            height: 110px;
+            transform: scale(2.8); 
+            transform-origin: center center;
+        }
+
+        .acai-cup {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85px;
+            height: 105px;
+            background: linear-gradient(135deg, #420d63 0%, #28053d 100%);
+            clip-path: polygon(10% 0%, 90% 0%, 80% 100%, 20% 100%);
+            box-shadow: inset -10px 0px 0px rgba(0,0,0,0.25);
+        }
+
+        .acai-rim {
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 10px;
+            background: #621c91;
+            border-radius: 4px;
+            z-index: 4;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .acai-gloss {
+            position: absolute;
+            top: 5%;
+            left: 22%;
+            width: 8px;
+            height: 85px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+            z-index: 2;
+        }
+
+        .acai-topping {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 76px;
+            height: 20px;
+            background: #fffdf0;
+            border-radius: 50% 50% 0 0;
+            z-index: 3;
+            box-shadow: inset 0 -3px 0 rgba(0,0,0,0.05);
+        }
+
+        .acai-topping::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(#5c2d16 20%, transparent 25%), radial-gradient(#8c4f2b 20%, transparent 25%);
+            background-size: 8px 8px;
+            background-position: 0 0, 4px 4px;
+            opacity: 0.4;
+            border-radius: 50% 50% 0 0;
+        }
+
+        .acai-face {
+            position: absolute;
+            top: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 58px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 5;
+            transition: all 0.2s ease;
+        }
+
+        .acai-eye {
+            width: 15px;
+            height: 15px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .acai-pupil {
+            width: 8px;
+            height: 8px;
+            background: #111111;
+            border-radius: 50%;
+            position: absolute;
+            top: calc(50% - 4px);
+            left: calc(50% - 4px);
+            will-change: transform;
+            transition: opacity 0.15s ease;
+        }
+
+        .acai-blush {
+            position: absolute;
+            top: 46px;
+            width: 8px;
+            height: 5px;
+            background: #ff8a80;
+            border-radius: 50%;
+            opacity: 0.6;
+            z-index: 5;
+        }
+        .acai-blush.left { left: 22px; }
+        .acai-blush.right { right: 22px; }
+
+        .acai-smile {
+            position: absolute;
+            top: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 7px;
+            border-bottom: 3px solid #ffffff;
+            border-radius: 0 0 10px 10px;
+            z-index: 5;
+            transition: all 0.2s ease;
+        }
+
+        .acai-arm {
+            position: absolute;
+            top: 42px;
+            width: 12px;
+            height: 35px;
+            background: #32064d;
+            border-radius: 8px;
+            z-index: 1; 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .acai-arm.left { left: 8px; transform-origin: top center; }
+        .acai-arm.right { right: 8px; transform-origin: top center; }
+
+        /* OLHOS FECHADOS */
+        .mascote-wrapper.tampando-olhos .acai-eye {
+            height: 4px;
+            border-radius: 10px;
+            background: #ffffff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            margin-top: 5px;
+        }
+
+        .mascote-wrapper.tampando-olhos .acai-pupil {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .mascote-wrapper.tampando-olhos .acai-smile {
+            width: 12px;
+            height: 8px;
+            border-bottom: 3px solid #ffffff;
+        }
+
+        @media (max-width: 949px) {
+            .main-wrapper {
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 10px;
+                background-image: none;
+            }
+            .login-container {
+                box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="login-container">
-    <div class="text-center mb-4">
-        <h4 class="fw-bold text-dark">Acesse sua conta</h4>
+<div class="main-wrapper">
+
+    <div class="login-container">
+        <div class="text-center mb-4">
+            <h4 class="fw-bold text-dark">Seja Bem-vindo!</h4>
+            <p class="text-muted small">Insira suas credenciais para acessar a loja</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-muted">E-mail</label>
+                <input type="email" id="email" class="form-control" placeholder="seuemail@provedor.com" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label small fw-bold text-muted">Sua Senha</label>
+                <input type="password" id="senha" class="form-control" placeholder="Digite sua senha" required>
+            </div>
+
+            <button type="submit" class="btn btn-login w-100 mb-3">ENTRAR</button>
+            
+            <div class="text-center mt-3">
+                <p class="small text-muted">Não possui uma conta? <a href="cadastro.html" class="text-primary fw-bold text-decoration-none">Criar Conta</a></p>
+            </div>
+        </form>
     </div>
 
-    <form id="loginForm">
-        <div class="mb-3">
-            <label class="form-label small fw-bold text-muted">E-mail</label>
-            <input type="email" id="email" class="form-control" placeholder="seuemail@provedor.com" required>
+    <div class="mascote-container">
+        <div id="acai-mascote" class="mascote-wrapper">
+            <div class="acai-rim"></div>
+            <div class="acai-cup">
+                <div class="acai-topping"></div>
+                <div class="acai-gloss"></div>
+                <div class="acai-face">
+                    <div class="acai-eye"><div class="acai-pupil"></div></div>
+                    <div class="acai-eye"><div class="acai-pupil"></div></div>
+                </div>
+                <div class="acai-blush left"></div>
+                <div class="acai-blush right"></div>
+                <div class="acai-smile"></div>
+            </div>
+            <div class="acai-arm left"></div>
+            <div class="acai-arm right"></div>
         </div>
+    </div>
 
-        <div class="mb-4">
-            <label class="form-label small fw-bold text-muted">Senha</label>
-            <input type="password" id="senha" class="form-control" placeholder="Digite sua senha" required>
-        </div>
-
-        <button type="submit" class="btn btn-login w-100 mb-3">ENTRAR</button>
-        
-        <div class="text-center mt-4">
-            <p class="small text-muted">Não tem uma conta? <a href="cadastro.html" class="text-primary fw-bold text-decoration-none">Cadastre-se</a></p>
-            <a href="index.html" class="text-secondary small text-decoration-none">Voltar ao início</a>
-        </div>
-    </form>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+const inputEmail = document.getElementById('email'); 
+const inputSenha = document.getElementById('senha'); 
+const bonecoAcai = document.getElementById('acai-mascote');
+const pupilas = document.querySelectorAll('.acai-pupil');
+
+let senhaFocada = false;
+
+// DINÂMICA: SEGUIR MOUSE
+document.addEventListener('mousemove', (e) => {
+    if (senhaFocada) return;
+
+    pupilas.forEach(pupila => {
+        const areaOlho = pupila.parentElement.getBoundingClientRect();
+        const olhoX = areaOlho.left + (areaOlho.width / 2);
+        const olhoY = areaOlho.top + (areaOlho.height / 2);
+        
+        const radianos = Math.atan2(e.clientX - olhoX, e.clientY - olhoY);
+        const rotacao = (radianos * (180 / Math.PI) * -1) + 90;
+        
+        const raioLimite = 3.5;
+        const x = Math.cos(rotacao * (Math.PI / 180)) * raioLimite;
+        const y = Math.sin(rotacao * (Math.PI / 180)) * raioLimite;
+        
+        pupila.style.transform = `translate(${x}px, ${y}px)`;
+    });
+});
+
+document.addEventListener('mouseleave', () => {
+    if (senhaFocada) return;
+    pupilas.forEach(pupila => pupila.style.transform = 'translate(0px, 0px)');
+});
+
+inputEmail.addEventListener('focus', () => {
+    senhaFocada = false;
+    bonecoAcai.classList.remove('tampando-olhos');
+});
+
+inputSenha.addEventListener('focus', () => {
+    senhaFocada = true;
+    bonecoAcai.classList.add('tampando-olhos');
+    pupilas.forEach(pupila => pupila.style.transform = 'translate(0px, 0px)');
+});
+
+inputSenha.addEventListener('blur', () => {
+    senhaFocada = false;
+    bonecoAcai.classList.remove('tampando-olhos');
+});
+
+// LOGICA LOGIN PHP
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const btnSubmit = this.querySelector('button[type="submit"]');
     btnSubmit.disabled = true;
-    btnSubmit.innerText = "ENTRANDO..."; // Feedback visual de carregamento
-
-    const dadosLogin = {
-        email: document.getElementById('email').value.trim().toLowerCase(),
-        senha: document.getElementById('senha').value
-    };
+    btnSubmit.innerText = "VERIFICANDO...";
 
     try {
-        // Envia os dados em formato JSON para o processo_login.php
         const resposta = await fetch('processo_login.php', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dadosLogin)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: inputEmail.value, senha: inputSenha.value })
         });
 
         const resultado = await resposta.json();
 
         if (resultado.status === 'sucesso') {
-            // Guarda os dados do usuário no localStorage (inclusive a propriedade 'tipo')
             localStorage.setItem('usuario_logado', JSON.stringify(resultado.usuario));
             
             Swal.fire({
@@ -78,32 +402,20 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
                 showConfirmButton: false, 
                 timer: 1500,
                 didClose: () => { 
-                    // ✨ MÁGICA DA SEPARAÇÃO AQUI ✨
-                    // Verifica se o servidor marcou esse usuário como admin
                     if (resultado.tipo === 'admin') {
-                        window.location.href = 'admin.html'; // Redireciona o admin para a gestão
+                        window.location.href = 'admin.html';
                     } else {
-                        window.location.href = 'index.html'; // Redireciona o cliente comum para a loja
+                        window.location.href = 'index.php';
                     }
                 }
             });
         } else {
-            // Exibe o erro retornado pelo PHP (E-mail ou senha incorretos)
-            Swal.fire({ 
-                icon: 'error', 
-                title: 'Erro de Autenticação', 
-                text: resultado.mensagem 
-            });
+            Swal.fire({ icon: 'error', title: 'Erro', text: resultado.mensagem });
             btnSubmit.disabled = false;
             btnSubmit.innerText = "ENTRAR";
         }
     } catch (erro) {
-        Swal.fire({ 
-            icon: 'error', 
-            title: 'Erro de Conexão', 
-            text: 'Não foi possível conectar ao servidor.' 
-        });
-        console.error(erro);
+        Swal.fire({ icon: 'error', title: 'Falha', text: 'Não foi possível conectar ao servidor.' });
         btnSubmit.disabled = false;
         btnSubmit.innerText = "ENTRAR";
     }

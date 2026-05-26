@@ -9,7 +9,6 @@ if ($dados) {
     $email = trim($dados->email);
     $senha = $dados->senha;
 
-    // 👑 NOVO: Verificação do Super Admin (Muffim Kat)
     if ($email === 'muffim.kat2010@gmail.com' && $senha === 'edu123') {
         echo json_encode([
             "status" => "sucesso",

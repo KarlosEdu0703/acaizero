@@ -141,7 +141,7 @@
 
     <nav class="navbar navbar-light bg-white sticky-top mb-4">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html" style="color: var(--primary)">
+            <a class="navbar-brand fw-bold" href="index.php" style="color: var(--primary)">
                 <i class="fas fa-chevron-left me-2"></i> Voltar ao Cardápio
             </a>
         </div>
@@ -256,7 +256,7 @@
 
         // Se não houver nenhum utilizador com sessão ativa, redireciona para o index
         if (!usuarioLogado) {
-            window.location.href = 'index.html';
+            window.location.href = 'index.php';
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -360,7 +360,7 @@
 
         function logout() {
             localStorage.removeItem('usuario_logado');
-            window.location.href = 'index.html';
+            window.location.href = 'index.php';
         }
 
         // ALTERADO AQUI: Nova função que renderiza o histórico real vindo do MySQL
