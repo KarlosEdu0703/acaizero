@@ -354,27 +354,31 @@ try {
 
         <div class="btn-group mt-3 flex-wrap d-inline-flex">
 
-            <button class="btn filter-btn active" data-filter="all">
-                ✨ Tudo
-            </button>
+    <button class="btn filter-btn active" data-filter="all">
+        ✨ Tudo
+    </button>
 
-            <button class="btn filter-btn" data-filter="burger">
-                🍔 Burgers
-            </button>
+    <button class="btn filter-btn" data-filter="burger">
+        🍔 Burgers
+    </button>
 
-            <button class="btn filter-btn" data-filter="acai">
-                🍧 Açaí
-            </button>
+    <button class="btn filter-btn" data-filter="acai">
+        🍧 Açaí
+    </button>
 
-            <button class="btn filter-btn" data-filter="combo">
-                🚀 Combos
-            </button>
+    <button class="btn filter-btn" data-filter="combo">
+        🚀 Combos
+    </button>
 
-            <button class="btn filter-btn" data-filter="porcao">
-                🍟 Porções
-            </button>
+    <button class="btn filter-btn" data-filter="porcao">
+        🍟 Porções
+    </button>
+    
+    <button class="btn filter-btn" data-filter="bebida">
+        🥤 Bebidas
+    </button>
 
-        </div>
+</div>
 
     </div>
 
@@ -388,6 +392,10 @@ try {
 
             switch(strtolower($produto['tag'])) {
 
+            case 'trincando':
+    $badgeClass = 'bg-info text-white';
+    break;
+    
                 case 'novo':
                     $badgeClass = 'bg-danger text-white';
                     break;
