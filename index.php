@@ -1,22 +1,3 @@
-<?php
-// 1. Importa as configurações de conexão com o banco de dados
-require_once 'config.php';
-
-try {
-    // 2. Faz a consulta para pegar todos os produtos da tabela
-    // ⚠️ ATENÇÃO: Confirme se o nome da sua tabela no banco é exatamente 'produtos'
-    $stmt = $pdo->query("SELECT * FROM produtos"); 
-    
-    // 3. Salva os produtos encontrados dentro da variável que o foreach está procurando
-    $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-} catch (PDOException $e) {
-    // Caso dê algum erro no banco, criamos a variável como um array vazio para não quebrar a página
-    $produtos = [];
-    // Opcional: Descomente a linha abaixo se quiser ver o erro do banco na tela enquanto testa
-    // echo "Erro no banco: " . $e->getMessage();
-}
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -333,7 +314,7 @@ try {
         </h1>
 
         <p class="lead mb-4 fs-4 text-light">
-            Hambúrgueres artesanais, porções e açaís feitos com amor.
+           AQUELE MOMENTO DE PAUSAR O DIA E COMER ALGO DELICIOSO
         </p>
 
         <a href="#cardapio"
@@ -557,6 +538,107 @@ AOS.init({
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
+// === NOVIDADE: FUNÇÃO QUE BUSCA OS PRODUTOS DA API EM C# ===
+function carregarCardapioDaApi() {
+    const productsGrid = document.getElementById('products-grid');
+    
+    // Mostra um indicador de carregamento simples na grade antes de puxar os dados
+    productsGrid.innerHTML = `
+        <div class="text-center w-100 my-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 text-muted">Carregando cardápio tecnológico...</p>
+        </div>
+    `;
+
+    // Faz a chamada direto para a sua API em C# rodando na porta 5092
+    fetch('http://localhost:5092/api/produtos')
+        .then(response => {
+            if (!response.ok) throw new Error('Erro ao conectar na API');
+            return response.json();
+        })
+        .then(produtos => {
+            // Limpa a grade para injetar os produtos recebidos
+            productsGrid.innerHTML = '';
+
+            if(produtos.length === 0) {
+                productsGrid.innerHTML = '<p class="text-center text-muted">Nenhum produto cadastrado no momento.</p>';
+                return;
+            }
+
+            // Mapeia e renderiza dinamicamente cada item na tela
+            produtos.forEach(produto => {
+                let badgeClass = 'bg-warning text-dark';
+
+                // Mantém a mesma lógica inteligente de cores de Tags que você tinha antes
+                switch((produto.tag || '').toLowerCase()) {
+                    case 'trincando':
+                    case 'refrescante':
+                    case 'energético':
+                    case 'energetico':
+                        badgeClass = 'bg-info text-white';
+                        break;
+                    case 'novo':
+                    case 'promoção':
+                    case 'promocao':
+                        badgeClass = 'bg-danger text-white';
+                        break;
+                    case 'crocante':
+                        badgeClass = 'bg-success text-white';
+                        break;
+                    case 'para dividir':
+                        badgeClass = 'bg-dark text-white';
+                        break;
+                }
+
+                // Cria o HTML do card perfeitamente idêntico ao seu design original
+                productsGrid.innerHTML += `
+                    <div class="col-12 col-md-6 col-lg-4 product-item"
+                         data-category="${(produto.categoria || '').toLowerCase()}"
+                         data-aos="fade-up">
+                        <div class="card h-100 shadow-sm product-card">
+                            <div class="img-container">
+                                <img src="${produto.imagem || 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd'}"
+                                     class="card-img-top"
+                                     alt="${produto.nome}">
+                            </div>
+                            <div class="card-body d-flex flex-column p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge ${badgeClass}">
+                                        ${produto.tag || 'Destaque'}
+                                    </span>
+                                    <span class="h5 mb-0 fw-bold text-primary">
+                                        R$ ${produto.preco.toFixed(2).replace('.', ',')}
+                                    </span>
+                                </div>
+                                <h5 class="card-title fw-bold">${produto.nome}</h5>
+                                <p class="card-text text-muted small flex-grow-1">${produto.descricao || ''}</p>
+                                <button class="btn btn-primary w-100 fw-bold btn-add-cart"
+                                        data-id="${produto.id}"
+                                        data-nome="${produto.nome}"
+                                        data-preco="${produto.preco}">
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Reinicializa as animações de subida para os cards novos aparecerem suavemente
+            AOS.refresh();
+        })
+        .catch(error => {
+            console.error('Erro ao processar cardápio da API:', error);
+            productsGrid.innerHTML = `
+                <div class="text-center w-100 my-5">
+                    <i class="fas fa-exclamation-triangle fa-2x text-danger mb-2"></i>
+                    <p class="text-danger fw-bold">Não foi possível carregar o cardápio!</p>
+                    <small class="text-muted">Verifique se sua API em C# está aberta e rodando no terminal do VS Code.</small>
+                </div>
+            `;
+        });
+}
+
 function updateCartUI() {
 
     const cartCount = document.getElementById('cart-count');
@@ -631,6 +713,7 @@ function addToCart(product) {
     });
 }
 
+// Escuta os cliques de forma global para funcionar com os botões gerados dinamicamente pela API
 document.addEventListener('click', e => {
 
     const btn = e.target.closest('.btn-add-cart');
@@ -646,6 +729,7 @@ document.addEventListener('click', e => {
     }
 });
 
+// Comportamento do filtro de categorias adaptado para a renderização assíncrona
 document.querySelectorAll('.filter-btn').forEach(btn => {
 
     btn.addEventListener('click', () => {
@@ -670,8 +754,8 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 });
 
 updateCartUI();
-// CONTROLE DE SESSÃO DO USUÁRIO
 
+// CONTROLE DE SESSÃO DO USUÁRIO
 function checarUsuario() {
 
     const userArea = document.getElementById('user-area');
@@ -793,8 +877,6 @@ function logout(event) {
 
 checarUsuario();
 
-// FINALIZAR COMPRA VIA WHATSAPP
-
 // FINALIZAR COMPRA SALVANDO NO BANCO E INDO PARA O WHATSAPP
 document.getElementById('checkout-btn').addEventListener('click', () => {
 
@@ -807,7 +889,6 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
         return;
     }
 
-    // 1. Recupera o usuário logado para obter o ID
     const cacheData = localStorage.getItem('usuario_logado');
     if (!cacheData) {
         Swal.fire({
@@ -821,7 +902,6 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
 
     const usuarioLogado = JSON.parse(cacheData);
 
-    // ⚠️ ATENÇÃO: Verifique se no seu processo_login.php você salvou como 'id' ou 'usuario_id'
     if (!usuarioLogado.id) {
         Swal.fire({
             icon: 'error',
@@ -831,20 +911,17 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
         return;
     }
 
-    // 2. Calcula o total do pedido
     let total = 0;
     cart.forEach(item => {
         total += item.preco * item.quantidade;
     });
 
-    // 3. Monta o objeto exatamente como o processo_pedido.php espera
     const dadosPedido = {
-        usuario_id: usuarioLogado.id, // ID do cliente vindo do localStorage
+        usuario_id: usuarioLogado.id,
         total: total,
-        itens: cart // Array contendo {nome, preco, quantidade}
+        itens: cart
     };
 
-    // Exibe um alerta de carregamento enquanto salva no banco
     Swal.fire({
         title: 'Processando seu pedido...',
         text: 'Por favor, aguarde.',
@@ -854,7 +931,6 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
         }
     });
 
-    // 4. Envia os dados para o servidor via API Fetch
     fetch('processo_pedido.php', {
         method: 'POST',
         headers: {
@@ -866,7 +942,6 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     .then(data => {
        if (data.status === 'sucesso') {
             
-            // 5. Se salvou no banco com sucesso, gera a mensagem linda do WhatsApp
             let msgCompleta = `🍇 *SABOR & ARTE - NOVO PEDIDO* 🍔\n`;
             msgCompleta += `===============================\n\n`;
             msgCompleta += `👤 *Cliente:* ${usuarioLogado.nome}\n`;
@@ -892,7 +967,6 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
             msgCompleta += `===============================\n\n`;
             msgCompleta += `✨ _Pedido gerado automaticamente pelo site!_`;
 
-            // Número de telefone do estabelecimento
             const telefone = '5531993013900';
 
             Swal.fire({
@@ -902,16 +976,12 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
                 timer: 2500,
                 showConfirmButton: false
             }).then(() => {
-                // Limpa o carrinho local
                 cart = [];
                 updateCartUI();
-
-                // Abre o WhatsApp convertendo a mensagem perfeitamente para link
                 window.open(`https://wa.me/${telefone}?text=${encodeURIComponent(msgCompleta)}`, '_blank');
             });
 
         } else {
-            // Caso o processo_pedido.php retorne algum erro de validação/banco
             Swal.fire({
                 icon: 'error',
                 title: 'Erro ao salvar pedido',
@@ -928,6 +998,9 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
         });
     });
 });
+
+// INICIALIZAÇÃO DA API C# NO SEGUNDO ZERO
+carregarCardapioDaApi();
 
 </script>
 
