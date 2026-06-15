@@ -31,7 +31,6 @@
             background: white;
         }
 
-        /* Foto de Perfil */
         .avatar-upload {
             position: relative;
             max-width: 150px;
@@ -251,38 +250,34 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // Carrega dados do utilizador logado vindos da sessão do banco
+
         const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
 
-        // Se não houver nenhum utilizador com sessão ativa, redireciona para o index
         if (!usuarioLogado) {
             window.location.href = 'index.php';
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Preenche os elementos de texto do ecrã
+
             document.getElementById('display-nome').innerText = usuarioLogado.nome;
             document.getElementById('display-email').innerText = usuarioLogado.email;
 
-            // Preenche os campos do formulário com os dados atuais da base de dados
+
             document.getElementById('nome').value = usuarioLogado.nome;
             document.getElementById('whatsapp').value = usuarioLogado.whatsapp;
             document.getElementById('endereco').value = usuarioLogado.endereco || '';
             document.getElementById('bairro').value = usuarioLogado.bairro || '';
             document.getElementById('cidade').value = usuarioLogado.cidade || '';
 
-            // Carrega a foto de perfil personalizada se ela existir na base de dados
             if (usuarioLogado.foto) {
                 document.getElementById('imagePreview').style.backgroundImage = `url(${usuarioLogado.foto})`;
             } else {
                 document.getElementById('imagePreview').style.backgroundImage = `url('https://ui-avatars.com/api/?name=${encodeURIComponent(usuarioLogado.nome)}&background=6a1b9a&color=fff')`;
             }
 
-            // ALTERADO AQUI: Agora chama a função do banco real
             carregarPedidosReais();
         });
 
-        // Lógica para detetar o Upload de Foto e conversão temporária para Base64
         document.getElementById('imageUpload').addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
@@ -291,14 +286,12 @@
                     const base64Image = event.target.result;
                     document.getElementById('imagePreview').style.backgroundImage = `url(${base64Image})`;
 
-                    // Atribui temporariamente a string da imagem ao objeto local
                     usuarioLogado.foto = base64Image;
                 }
                 reader.readAsDataURL(file);
             }
         });
 
-        // Guardar os dados do Formulário diretamente na Base de Dados
         document.getElementById('perfilForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
@@ -306,7 +299,6 @@
             btnSubmit.disabled = true;
             btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>A GUARDAR...';
 
-            // Atualiza o objeto com as novas strings digitadas nos inputs
             usuarioLogado.nome = document.getElementById('nome').value.trim();
             usuarioLogado.whatsapp = document.getElementById('whatsapp').value.trim();
             usuarioLogado.endereco = document.getElementById('endereco').value.trim();
@@ -314,7 +306,7 @@
             usuarioLogado.cidade = document.getElementById('cidade').value.trim();
 
             try {
-                // Faz o envio assíncrono para o atualizar_perfil.php
+     
                 const resposta = await fetch('atualizar_perfil.php', {
                     method: 'POST',
                     headers: {
@@ -326,7 +318,7 @@
                 const resultado = await resposta.json();
 
                 if (resultado.status === 'sucesso') {
-                    // Sincroniza os novos dados atualizados no localStorage do ecrã atual
+
                     localStorage.setItem('usuario_logado', JSON.stringify(usuarioLogado));
 
                     Swal.fire({
@@ -363,7 +355,6 @@
             window.location.href = 'index.php';
         }
 
-        // ALTERADO AQUI: Nova função que renderiza o histórico real vindo do MySQL
         async function carregarPedidosReais() {
             const lista = document.getElementById('lista-pedidos');
 
@@ -385,17 +376,15 @@
                     }
 
                     lista.innerHTML = resultado.pedidos.map(p => {
-                        // Mapeia dinamicamente a cor do badge Bootstrap conforme o status do banco
-                        let corBadge = 'warning'; // Pendente
+
+                        let corBadge = 'warning';
                         if (p.status === 'Entregue') corBadge = 'success';
                         if (p.status === 'Cancelado') corBadge = 'danger';
                         if (p.status === 'Preparando') corBadge = 'info';
 
-                        // Trata a string de data do banco de dados (AAAA-MM-DD) para o formato brasileiro (DD/MM/AAAA)
                         const dataBanco = new Date(p.data_pedido);
                         const dataFormatada = dataBanco.toLocaleDateString('pt-BR');
 
-                        // Formata o valor decimal do total com vírgula para exibição monetária
                         const totalFormatado = parseFloat(p.total).toFixed(2).replace('.', ',');
 
                         return `
@@ -415,31 +404,29 @@
                 lista.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-4">Não foi possível carregar seu histórico.</td></tr>';
             }
         }
-        // INTEGRAÇÃO COM A API DO VIACEP
+
 document.getElementById('cep').addEventListener('blur', async function() {
-    // Remove qualquer carácter que não seja número (ex: o traço)
+
     let cepDigitado = this.value.replace(/\D/g, ''); 
-    
-    // Verifica se o CEP tem exatamente 8 números
+
     if (cepDigitado.length === 8) {
-        // Dá um feedback visual para o utilizador saber que está a carregar
+      
         document.getElementById('endereco').value = "A procurar...";
         document.getElementById('bairro').value = "...";
         document.getElementById('cidade').value = "...";
 
         try {
-            // Faz a chamada (fetch) à API pública do ViaCEP
+
             const resposta = await fetch(`https://viacep.com.br/ws/${cepDigitado}/json/`);
             const dados = await resposta.json();
 
-            // Se o ViaCEP não retornar um erro (ex: CEP inexistente)
+
             if (!dados.erro) {
-                // Preenche os campos automaticamente
+
                 document.getElementById('endereco').value = dados.logradouro + ', ';
                 document.getElementById('bairro').value = dados.bairro;
-                document.getElementById('cidade').value = dados.localidade; // O ViaCEP chama à cidade "localidade"
-                
-                // Opcional: Coloca o cursor a piscar no endereço para o utilizador apenas escrever o número da porta
+                document.getElementById('cidade').value = dados.localidade; 
+
                 document.getElementById('endereco').focus();
             } else {
                 Swal.fire({ icon: 'error', title: 'CEP Inválido', text: 'Não conseguimos encontrar este código postal.' });
@@ -453,7 +440,6 @@ document.getElementById('cep').addEventListener('blur', async function() {
     }
 });
 
-// Função auxiliar para limpar em caso de erro
 function limparCamposEndereco() {
     document.getElementById('endereco').value = "";
     document.getElementById('bairro').value = "";

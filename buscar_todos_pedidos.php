@@ -3,7 +3,6 @@ require_once 'config.php';
 header('Content-Type: application/json');
 
 try {
-    // Busca todos os pedidos e faz um JOIN com a tabela usuários para pegar o nome e whatsapp do cliente
     $sql = "SELECT p.id, u.nome AS cliente, u.whatsapp, p.total, p.status, p.data_pedido 
             FROM pedidos p 
             JOIN usuarios u ON p.usuario_id = u.id 

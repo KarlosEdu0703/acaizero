@@ -1,8 +1,7 @@
 <?php
 require_once 'config.php';
-header('Content-Type: application/json'); // Define a resposta como JSON
+header('Content-Type: application/json');
 
-// Recebe os dados em formato JSON enviados pelo JavaScript
 $dados = json_decode(file_get_contents("php://input"));
 
 if ($dados && isset($dados->id)) {
@@ -12,10 +11,10 @@ if ($dados && isset($dados->id)) {
     $endereco = trim($dados->endereco);
     $bairro = trim($dados->bairro);
     $cidade = trim($dados->cidade);
-    $foto = $dados->foto ?? null; // Recebe a imagem em Base64 ou mantém null se não alterada
+    $foto = $dados->foto ?? null;
 
     try {
-        // Executa a atualização dos dados e da foto na tabela de usuários
+
         $sql = "UPDATE usuarios SET nome = ?, whatsapp = ?, endereco = ?, bairro = ?, cidade = ?, foto = ? WHERE id = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$nome, $whatsapp, $endereco, $bairro, $cidade, $foto, $id]);

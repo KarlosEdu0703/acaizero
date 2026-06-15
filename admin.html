@@ -12,7 +12,6 @@
         .navbar-admin { background-color: #1a1a1a; color: white; }
         .status-select { font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
         
-        /* Cores customizadas para destacar os status de forma elegante */
         .status-pendente { background-color: #fff3cd !important; color: #856404 !important; border-color: #ffeeba !important; }
         .status-preparando { background-color: #cce5ff !important; color: #004085 !important; border-color: #b8daff !important; }
         .status-entregue { background-color: #d4edda !important; color: #155724 !important; border-color: #c3e6cb !important; }
@@ -61,11 +60,10 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         carregarTodosPedidos();
-        // Atualiza a lista sozinho a cada 10 segundos sem precisar dar F5! 🔄
+
         setInterval(carregarTodosPedidos, 10000);
     });
 
-    // Função auxiliar para definir qual classe de cor o select vai usar
     function obterClasseStatus(status) {
         if (status === 'Pendente') return 'status-pendente';
         if (status === 'Preparando') return 'status-preparando';
@@ -89,7 +87,6 @@
                     return;
                 }
 
-                // Atualiza o número do contador no topo com a quantidade de pedidos ativos
                 const pedidosAtivos = resultado.pedidos.filter(p => p.status === 'Pendente' || p.status === 'Preparando').length;
                 badgeContador.innerText = pedidosAtivos;
 
@@ -126,7 +123,7 @@
             }
         } catch (erro) {
             console.error(erro);
-            // Removemos o alerta travando a tela aqui para não incomodar caso ocorra uma oscilação rápida na rede durante o auto-refresh
+
         }
     }
 
@@ -144,11 +141,9 @@
             if (resultado.status === 'sucesso') {
                 Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Status atualizado!', showConfirmButton: false, timer: 1500 });
                 
-                // Remove as classes de cores antigas do select e aplica a nova na mesma hora!
                 elementoSelect.classList.remove('status-pendente', 'status-preparando', 'status-entregue', 'status-cancelado');
                 elementoSelect.classList.add(obterClasseStatus(novoStatus));
                 
-                // Recarrega os dados rapidamente para atualizar o contador do topo
                 carregarTodosPedidos();
             } else {
                 Swal.fire({ icon: 'error', title: 'Erro', text: resultado.mensagem });

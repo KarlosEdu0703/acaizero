@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SaborArteApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d7648dedc5390c957ebc74fb524f708d0d09405c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2d3cce50923e732a17c3fbc2c56d7a55a6b3d074")]
 [assembly: System.Reflection.AssemblyProductAttribute("SaborArteApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SaborArteApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

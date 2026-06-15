@@ -29,7 +29,6 @@
             margin: 0;
         }
 
-        /* GRANDE CONTAINER EM VOLTA DE TUDO COM TEXTURA E EFEITO DE VIDRO */
         .main-wrapper {
             display: flex;
             align-items: center;
@@ -41,20 +40,18 @@
             padding: 40px;
             border-radius: 30px;
             
-            /* Efeito de Vidro Transparente Reforçado */
             background-color: rgba(255, 255, 255, 0.25); 
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.4);
             
-            /* Padrão sutil de micropontos por cima do fundo */
             background-image: radial-gradient(rgba(106, 27, 154, 0.08) 1.5px, transparent 1.5px);
             background-size: 16px 16px;
             
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
         }
 
-        /* CAIXA DE LOGIN (ESQUERDA) */
+        /*CAIXA DE LOGIN*/
         .login-container { 
             background: rgba(255, 255, 255, 0.95); 
             border-radius: 20px; 
@@ -81,7 +78,7 @@
             color: white; 
         }
 
-        /* CONTAINER DO MASCOTE (DIREITA) */
+        /*MASCOTE*/
         .mascote-container {
             display: none;
             flex: 1;
@@ -94,7 +91,7 @@
             .mascote-container { display: flex; }
         }
 
-        /* MASCOTE AÇAÍ GIGANTE */
+        /*MASCOte*/
         .mascote-wrapper {
             position: relative;
             width: 120px;
@@ -241,7 +238,7 @@
         .acai-arm.left { left: 8px; transform-origin: top center; }
         .acai-arm.right { right: 8px; transform-origin: top center; }
 
-        /* OLHOS FECHADOS */
+        /* OLHOS FECHADOS SENHA*/
         .mascote-wrapper.tampando-olhos .acai-eye {
             height: 4px;
             border-radius: 10px;
@@ -334,7 +331,7 @@ const pupilas = document.querySelectorAll('.acai-pupil');
 
 let senhaFocada = false;
 
-// DINÂMICA: SEGUIR MOUSE
+/*SEGUIR MOUSE*/
 document.addEventListener('mousemove', (e) => {
     if (senhaFocada) return;
 
@@ -375,7 +372,6 @@ inputSenha.addEventListener('blur', () => {
     bonecoAcai.classList.remove('tampando-olhos');
 });
 
-// LOGICA LOGIN PHP
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     

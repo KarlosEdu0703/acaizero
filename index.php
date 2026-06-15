@@ -33,8 +33,6 @@
             overflow-x: hidden;
             scroll-behavior: smooth;
             
-            /* CONFIGURAÇÃO DO FUNDO OPACO CLARINHO */
-            /* Usando a imagem fundo.avif do seu projeto com uma camada branca de 94% de opacidade por cima */
             background: linear-gradient(rgba(252, 252, 252, 0.94), rgba(252, 252, 252, 0.94)), 
                         url('fundo.avif');
             background-attachment: fixed;
@@ -46,7 +44,6 @@
             font-family: 'Poppins', sans-serif !important;
         }
 
-        /* AJUSTE DE RESPONSIVIDADE NA NAVBAR */
         .navbar {
             background: rgba(255,255,255,0.85) !important;
             backdrop-filter: blur(12px);
@@ -115,7 +112,6 @@
             color: white !important;
         }
 
-        /* HERO SECTION RESPONSIVA */
         .hero-section {
             background:
             linear-gradient(to bottom, rgba(18,18,18,0.45), rgba(18,18,18,0.8)),
@@ -125,7 +121,6 @@
             background-position: center;
             background-attachment: fixed;
 
-            /* Altura menor em celulares, maior em telas grandes */
             padding: 100px 0 80px 0;
         }
         
@@ -133,7 +128,6 @@
             .hero-section { padding: 160px 0 130px 0; }
         }
         
-        /* Ajuste de fontes do Hero para telas menores */
         .hero-section h1 {
             font-size: 2rem;
         }
@@ -148,7 +142,6 @@
             .hero-section p { font-size: 1.25rem !important; }
         }
 
-        /* BOTÕES DE FILTRO MAIS AMIGÁVEIS AO TOQUE */
         .btn-group .filter-btn {
             border: 1px solid #e2e8f0;
             border-radius: 30px !important;
@@ -168,7 +161,6 @@
             box-shadow: 0 4px 10px rgba(81, 18, 129, 0.25);
         }
 
-        /* CARD DOS PRODUTOS MELHORADO */
         .product-card {
             border-radius: 24px;
             overflow: hidden;
@@ -188,7 +180,6 @@
             position: relative;
         }
 
-        /* Imagem do produto menor em celulares para não quebrar o layout */
         .card-img-top {
             height: 180px;
             object-fit: cover;
@@ -223,7 +214,6 @@
             background-color: var(--primary-light);
         }
         
-        /* Ajuste das margens laterais da grade em telas pequenas */
         @media (max-width: 576px) {
             #products-grid {
                 padding: 0 5px;
@@ -624,7 +614,6 @@ function carregarCardapioDaApi() {
                 `;
             });
 
-            // Reinicializa as animações de subida para os cards novos aparecerem suavemente
             AOS.refresh();
         })
         .catch(error => {
@@ -713,7 +702,6 @@ function addToCart(product) {
     });
 }
 
-// Escuta os cliques de forma global para funcionar com os botões gerados dinamicamente pela API
 document.addEventListener('click', e => {
 
     const btn = e.target.closest('.btn-add-cart');
@@ -729,7 +717,6 @@ document.addEventListener('click', e => {
     }
 });
 
-// Comportamento do filtro de categorias adaptado para a renderização assíncrona
 document.querySelectorAll('.filter-btn').forEach(btn => {
 
     btn.addEventListener('click', () => {
@@ -755,7 +742,6 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 
 updateCartUI();
 
-// CONTROLE DE SESSÃO DO USUÁRIO
 function checarUsuario() {
 
     const userArea = document.getElementById('user-area');
@@ -877,7 +863,6 @@ function logout(event) {
 
 checarUsuario();
 
-// FINALIZAR COMPRA SALVANDO NO BANCO E INDO PARA O WHATSAPP
 document.getElementById('checkout-btn').addEventListener('click', () => {
 
     if(cart.length === 0) {
@@ -999,7 +984,6 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     });
 });
 
-// INICIALIZAÇÃO DA API C# NO SEGUNDO ZERO
 carregarCardapioDaApi();
 
 </script>
