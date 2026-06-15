@@ -15,7 +15,7 @@ if ($dados) {
         echo json_encode(["status" => "erro", "mensagem" => "Por favor, preencha todos os campos."]);
         exit;
     }
-r
+
     if (strtolower($email) === 'muffim.kat2010@gmail.com') {
         echo json_encode(["status" => "erro", "mensagem" => "Este e-mail é reservado para a administração do sistema."]);
         exit;
