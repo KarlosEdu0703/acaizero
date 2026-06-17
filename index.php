@@ -319,139 +319,32 @@
 
 <main class="container my-5" id="cardapio">
 
-    <div class="text-center mb-5" data-aos="fade-up">
+    <div id="secao-mais-pedidos" class="mb-5 d-none" data-aos="fade-up">
+        <div class="d-flex align-items-center mb-4">
+            <h2 class="fw-bold display-6 mb-0 me-3">Mais Pedidos 🔥</h2>
+            <span class="badge bg-danger text-white p-2" style="font-size: 0.8rem; border-radius: 12px;">
+                <i class="fas fa-star me-1"></i> Os Queridinhos da Galera
+            </span>
+        </div>
+        
+        <div class="row g-4" id="mais-pedidos-grid"></div>
+        <hr class="my-5" style="opacity: 0.15;">
+    </div>
 
+    <div class="text-center mb-5" data-aos="fade-up">
         <h2 class="fw-bold display-6">Nosso Cardápio</h2>
 
         <div class="btn-group mt-3 flex-wrap d-inline-flex">
-
-    <button class="btn filter-btn active" data-filter="all">
-        ✨ Tudo
-    </button>
-
-    <button class="btn filter-btn" data-filter="burger">
-        🍔 Burgers
-    </button>
-
-    <button class="btn filter-btn" data-filter="acai">
-        🍧 Açaí
-    </button>
-
-    <button class="btn filter-btn" data-filter="combo">
-        🚀 Combos
-    </button>
-
-    <button class="btn filter-btn" data-filter="porcao">
-        🍟 Porções
-    </button>
-    
-    <button class="btn filter-btn" data-filter="bebida">
-        🥤 Bebidas
-    </button>
-
-</div>
-
+            <button class="btn filter-btn active" data-filter="all">✨ Tudo</button>
+            <button class="btn filter-btn" data-filter="burger">🍔 Burgers</button>
+            <button class="btn filter-btn" data-filter="acai">🍧 Açaí</button>
+            <button class="btn filter-btn" data-filter="combo">🚀 Combos</button>
+            <button class="btn filter-btn" data-filter="porcao">🍟 Porções</button>
+            <button class="btn filter-btn" data-filter="bebida">🥤 Bebidas</button>
+        </div>
     </div>
 
-    <div class="row g-4" id="products-grid">
-
-        <?php foreach($produtos as $produto): ?>
-
-            <?php
-
-            $badgeClass = 'bg-warning text-dark';
-
-            switch(strtolower($produto['tag'])) {
-
-            case 'trincando':
-    $badgeClass = 'bg-info text-white';
-    break;
-    
-                case 'novo':
-                    $badgeClass = 'bg-danger text-white';
-                    break;
-
-                case 'promoção':
-                case 'promocao':
-                    $badgeClass = 'bg-danger text-white';
-                    break;
-
-                case 'energético':
-                case 'energetico':
-                    $badgeClass = 'bg-info text-white';
-                    break;
-
-                case 'refrescante':
-                    $badgeClass = 'bg-info text-white';
-                    break;
-
-                case 'crocante':
-                    $badgeClass = 'bg-success text-white';
-                    break;
-
-                case 'para dividir':
-                    $badgeClass = 'bg-dark text-white';
-                    break;
-            }
-
-            ?>
-
-            <div class="col-12 col-md-6 col-lg-4 product-item"
-                 data-category="<?= strtolower($produto['categoria']) ?>"
-                 data-aos="fade-up">
-
-                <div class="card h-100 shadow-sm product-card">
-
-                    <div class="img-container">
-
-                        <img
-                            src="<?= htmlspecialchars($produto['imagem']) ?>"
-                            class="card-img-top"
-                            alt="<?= htmlspecialchars($produto['nome']) ?>"
-                        >
-
-                    </div>
-
-                    <div class="card-body d-flex flex-column p-4">
-
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-
-                            <span class="badge <?= $badgeClass ?>">
-                                <?= htmlspecialchars($produto['tag']) ?>
-                            </span>
-
-                            <span class="h5 mb-0 fw-bold text-primary">
-                                R$ <?= number_format($produto['preco'], 2, ',', '.') ?>
-                            </span>
-
-                        </div>
-
-                        <h5 class="card-title fw-bold">
-                            <?= htmlspecialchars($produto['nome']) ?>
-                        </h5>
-
-                        <p class="card-text text-muted small flex-grow-1">
-                            <?= htmlspecialchars($produto['descricao']) ?>
-                        </p>
-
-                        <button
-                            class="btn btn-primary w-100 fw-bold btn-add-cart"
-                            data-id="<?= $produto['id'] ?>"
-                            data-nome="<?= htmlspecialchars($produto['nome']) ?>"
-                            data-preco="<?= $produto['preco'] ?>"
-                        >
-                            Adicionar
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        <?php endforeach; ?>
-
-    </div>
+    <div class="row g-4" id="products-grid"></div>
 
 </main>
 
@@ -875,23 +768,38 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     }
 
     const cacheData = localStorage.getItem('usuario_logado');
+
+    // Lógica com a escolha para o cliente
     if (!cacheData) {
         Swal.fire({
-            icon: 'error',
-            title: 'Acesso necessário',
-            text: 'Você precisa estar logado para finalizar o pedido!',
-            footer: '<a href="login.html" class="btn btn-sm btn-primary">Fazer Login agora</a>'
+            icon: 'info',
+            title: 'Finalizar pedido',
+            text: 'Deseja fazer login ou prefere um cadastro rápido?',
+            showCancelButton: true,
+            showDenyButton: true,
+            confirmButtonText: 'Cadastro Rápido',
+            confirmButtonColor: '#28a745', 
+            denyButtonText: 'Fazer Login',
+            denyButtonColor: '#511281',   
+            cancelButtonText: 'Voltar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'cadastro_rapido.html';
+            } else if (result.isDenied) {
+                window.location.href = 'login.html';
+            }
         });
         return;
     }
 
+    // Fluxo para usuário logado
     const usuarioLogado = JSON.parse(cacheData);
 
     if (!usuarioLogado.id) {
         Swal.fire({
             icon: 'error',
             title: 'Erro de Identificação',
-            text: 'Não foi possível encontrar o ID do usuário logado. Refaça o login.'
+            text: 'Não foi possível identificar o usuário. Refaça o login.'
         });
         return;
     }
@@ -909,78 +817,47 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
 
     Swal.fire({
         title: 'Processando seu pedido...',
-        text: 'Por favor, aguarde.',
         allowOutsideClick: false,
-        didOpen: () => {
-            Swal.showLoading();
-        }
+        didOpen: () => { Swal.showLoading(); }
     });
 
     fetch('processo_pedido.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dadosPedido)
     })
     .then(response => response.json())
     .then(data => {
-       if (data.status === 'sucesso') {
-            
+        if (data.status === 'sucesso') {
             let msgCompleta = `🍇 *SABOR & ARTE - NOVO PEDIDO* 🍔\n`;
             msgCompleta += `===============================\n\n`;
             msgCompleta += `👤 *Cliente:* ${usuarioLogado.nome}\n`;
             msgCompleta += `📱 *WhatsApp:* ${usuarioLogado.whatsapp || 'Não informado'}\n\n`;
-            
-            msgCompleta += `📍 *ENDEREÇO DE ENTREGA:*\n`;
-            if (usuarioLogado.endereco) {
-                msgCompleta += `• *Rua:* ${usuarioLogado.endereco}\n`;
-                msgCompleta += `• *Bairro:* ${usuarioLogado.bairro || 'Não informado'}\n`;
-                msgCompleta += `• *Cidade:* ${usuarioLogado.cidade || 'Não informada'}\n\n`;
-            } else {
-                msgCompleta += `⚠️ _Endereço não cadastrado (Combinar no chat)_\n\n`;
-            }
-
-            msgCompleta += `🛒 *ITENS DO PEDIDO:*\n`;
+            msgCompleta += `📍 *ENDEREÇO:* ${usuarioLogado.endereco || 'Não informado'}\n\n`;
+            msgCompleta += `🛒 *ITENS:*\n`;
             cart.forEach(item => {
-                const subtotalItem = (item.preco * item.quantidade).toFixed(2).replace('.', ',');
-                msgCompleta += `• *${item.quantidade}x* ${item.nome} _(R$ ${subtotalItem})_\n`;
+                const subtotal = (item.preco * item.quantidade).toFixed(2).replace('.', ',');
+                msgCompleta += `• *${item.quantidade}x* ${item.nome} _(R$ ${subtotal})_\n`;
             });
-            
-            msgCompleta += `\n===============================\n`;
-            msgCompleta += `💰 *TOTAL DO PEDIDO:* R$ ${total.toFixed(2).replace('.', ',')}\n`;
-            msgCompleta += `===============================\n\n`;
-            msgCompleta += `✨ _Pedido gerado automaticamente pelo site!_`;
-
-            const telefone = '5531993013900';
+            msgCompleta += `\n💰 *TOTAL:* R$ ${total.toFixed(2).replace('.', ',')}`;
 
             Swal.fire({
                 icon: 'success',
                 title: 'Pedido Confirmado!',
-                text: 'Seu pedido foi registrado no sistema. Redirecionando para o WhatsApp...',
-                timer: 2500,
+                text: 'Redirecionando...',
+                timer: 2000,
                 showConfirmButton: false
             }).then(() => {
                 cart = [];
                 updateCartUI();
-                window.open(`https://wa.me/${telefone}?text=${encodeURIComponent(msgCompleta)}`, '_blank');
+                window.open(`https://wa.me/5531993013900?text=${encodeURIComponent(msgCompleta)}`, '_blank');
             });
-
         } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Erro ao salvar pedido',
-                text: data.mensagem
-            });
+            Swal.fire({ icon: 'error', title: 'Erro', text: data.mensagem });
         }
     })
-    .catch(error => {
-        console.error('Erro na requisição:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Erro de Conexão',
-            text: 'Não foi possível conectar ao servidor para salvar seu pedido.'
-        });
+    .catch(() => {
+        Swal.fire({ icon: 'error', title: 'Falha', text: 'Erro ao conectar ao servidor.' });
     });
 });
 
