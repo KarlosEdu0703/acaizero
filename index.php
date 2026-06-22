@@ -220,6 +220,30 @@
             }
         }
 
+/* Estilo para os cards que receberem o destaque */
+.card-destacado {
+    border: 2px solid #ffca28 !important; /* Borda dourada marcante */
+    box-shadow: 0 10px 25px rgba(255, 202, 40, 0.15) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Selo/Etiqueta de "Especial" no topo do card */
+.selo-internacional {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(45deg, #ffca28, #ffa000);
+    color: #121212;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 6px 12px;
+    border-radius: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    z-index: 10;
+}
     </style>
 </head>
 
@@ -449,6 +473,20 @@ function carregarCardapioDaApi() {
             }
 
             // Mapeia e renderiza dinamicamente cada item na tela
+            // Mapeia e renderiza dinamicamente cada item na tela
+            // ✨ NOVO: Ordena o array de produtos para colocar os do Festival Internacional no topo da lista
+            // ✨ NOVO: Ordena o array de produtos
+            produtos.sort((a, b) => {
+                // Adicionamos 'Brasileiro' na lista abaixo!
+                const termosDestaque = ['Americano', 'Italiano', 'Mexicano', 'Francês', 'Brasileiro'];
+                
+                const aEhInternacional = termosDestaque.some(termo => (a.nome || '').includes(termo));
+                const bEhInternacional = termosDestaque.some(termo => (b.nome || '').includes(termo));
+                
+                return bEhInternacional - aEhInternacional;
+            });
+
+            // Mapeia e renderiza dinamicamente cada item na tela (agora já ordenados!)
             produtos.forEach(produto => {
                 let badgeClass = 'bg-warning text-dark';
 
@@ -473,13 +511,23 @@ function carregarCardapioDaApi() {
                         break;
                 }
 
-                // Cria o HTML do card perfeitamente idêntico ao seu design original
+                // Identifica se é um dos hambúrgueres do Festival Internacional para aplicar o estilo
+                // Identifica se é um dos hambúrgueres do Festival Internacional para aplicar o estilo
+                const nomeProduto = produto.nome || '';
+                const ehInternacional = nomeProduto.includes('Americano') || 
+                                       nomeProduto.includes('Italiano') || 
+                                       nomeProduto.includes('Mexicano') || 
+                                       nomeProduto.includes('Francês') || 
+                                       nomeProduto.includes('Brasileiro'); // <-- Adicionamos ele aqui!
+
+                // Cria o HTML do card injetando a borda e o selo se for internacional
                 productsGrid.innerHTML += `
                     <div class="col-12 col-md-6 col-lg-4 product-item"
                          data-category="${(produto.categoria || '').toLowerCase()}"
                          data-aos="fade-up">
-                        <div class="card h-100 shadow-sm product-card">
-                            <div class="img-container">
+                        <div class="card h-100 shadow-sm product-card ${ehInternacional ? 'card-destacado' : ''}">
+                            <div class="img-container" style="position: relative;">
+                                ${ehInternacional ? `<span class="selo-internacional"><i class="fa-solid fa-earth-americas"></i> Edição Especial</span>` : ''}
                                 <img src="${produto.imagem || 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd'}"
                                      class="card-img-top"
                                      alt="${produto.nome}">
@@ -506,7 +554,6 @@ function carregarCardapioDaApi() {
                     </div>
                 `;
             });
-
             AOS.refresh();
         })
         .catch(error => {
