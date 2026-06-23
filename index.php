@@ -244,6 +244,93 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     z-index: 10;
 }
+
+/* =========================================
+   CSS DO MASCOTE NA NAVBAR (LOGO)
+   ========================================= */
+.mascote-wrapper-nav {
+    position: relative;
+    width: 120px;
+    height: 110px;
+    transform: scale(0.4); /* Escala ajustada para a navbar */
+    transform-origin: left center;
+    margin-right: -60px; /* Compensa o espaço fantasma do scale */
+    margin-top: -15px;
+    margin-bottom: -15px;
+}
+
+.acai-cup {
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 85px; height: 105px;
+    background: linear-gradient(135deg, #420d63 0%, #28053d 100%);
+    clip-path: polygon(10% 0%, 90% 0%, 80% 100%, 20% 100%);
+    box-shadow: inset -10px 0px 0px rgba(0,0,0,0.25);
+}
+
+.acai-rim {
+    position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+    width: 90px; height: 10px; background: #621c91;
+    border-radius: 4px; z-index: 4; box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.acai-gloss {
+    position: absolute; top: 5%; left: 22%;
+    width: 8px; height: 85px; background: rgba(255, 255, 255, 0.12);
+    border-radius: 4px; z-index: 2;
+}
+
+.acai-topping {
+    position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+    width: 76px; height: 20px; background: #fffdf0;
+    border-radius: 50% 50% 0 0; z-index: 3; box-shadow: inset 0 -3px 0 rgba(0,0,0,0.05);
+}
+
+.acai-topping::before {
+    content: ''; position: absolute; width: 100%; height: 100%;
+    background-image: radial-gradient(#5c2d16 20%, transparent 25%), radial-gradient(#8c4f2b 20%, transparent 25%);
+    background-size: 8px 8px; background-position: 0 0, 4px 4px;
+    opacity: 0.4; border-radius: 50% 50% 0 0;
+}
+
+.acai-face {
+    position: absolute; top: 32px; left: 50%; transform: translateX(-50%);
+    width: 58px; display: flex; justify-content: space-between;
+    z-index: 5; transition: all 0.2s ease;
+}
+
+.acai-eye {
+    width: 15px; height: 15px; background: #ffffff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); position: relative; overflow: hidden;
+}
+
+.acai-pupil {
+    width: 8px; height: 8px; background: #111111; border-radius: 50%;
+    position: absolute; top: calc(50% - 4px); left: calc(50% - 4px);
+    will-change: transform; transition: opacity 0.15s ease;
+}
+
+.acai-blush {
+    position: absolute; top: 46px; width: 8px; height: 5px;
+    background: #ff8a80; border-radius: 50%; opacity: 0.6; z-index: 5;
+}
+.acai-blush.left { left: 22px; }
+.acai-blush.right { right: 22px; }
+
+.acai-smile {
+    position: absolute; top: 48px; left: 50%; transform: translateX(-50%);
+    width: 14px; height: 7px; border-bottom: 3px solid #ffffff;
+    border-radius: 0 0 10px 10px; z-index: 5;
+}
+
+.acai-arm {
+    position: absolute; top: 42px; width: 12px; height: 35px;
+    background: #32064d; border-radius: 8px; z-index: 1; 
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.acai-arm.left { left: 8px; transform-origin: top center; }
+.acai-arm.right { right: 8px; transform-origin: top center; }
+
     </style>
 </head>
 
@@ -253,10 +340,25 @@
 
     <div class="container">
 
-        <a class="navbar-brand" href="#">
-            <i class="fa-solid fa-ice-cream"></i>
-            AÇAIZERO
-        </a>
+        <a class="navbar-brand d-flex align-items-center" href="#">
+    <div id="logo-mascote" class="mascote-wrapper-nav">
+        <div class="acai-rim"></div>
+        <div class="acai-cup">
+            <div class="acai-topping"></div>
+            <div class="acai-gloss"></div>
+            <div class="acai-face">
+                <div class="acai-eye"><div class="acai-pupil"></div></div>
+                <div class="acai-eye"><div class="acai-pupil"></div></div>
+            </div>
+            <div class="acai-blush left"></div>
+            <div class="acai-blush right"></div>
+            <div class="acai-smile"></div>
+        </div>
+        <div class="acai-arm left"></div>
+        <div class="acai-arm right"></div>
+    </div>
+    AÇAIZERO
+</a>
 
         <div class="d-flex align-items-center order-lg-3">
 
@@ -444,6 +546,30 @@ AOS.init({
 });
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// === ANIMAÇÃO DO MASCOTE NA NAVBAR ===
+const pupilasNav = document.querySelectorAll('#logo-mascote .acai-pupil');
+
+document.addEventListener('mousemove', (e) => {
+    pupilasNav.forEach(pupila => {
+        const areaOlho = pupila.parentElement.getBoundingClientRect();
+        const olhoX = areaOlho.left + (areaOlho.width / 2);
+        const olhoY = areaOlho.top + (areaOlho.height / 2);
+        
+        const radianos = Math.atan2(e.clientX - olhoX, e.clientY - olhoY);
+        const rotacao = (radianos * (180 / Math.PI) * -1) + 90;
+        
+        const raioLimite = 3.5;
+        const x = Math.cos(rotacao * (Math.PI / 180)) * raioLimite;
+        const y = Math.sin(rotacao * (Math.PI / 180)) * raioLimite;
+        
+        pupila.style.transform = `translate(${x}px, ${y}px)`;
+    });
+});
+
+document.addEventListener('mouseleave', () => {
+    pupilasNav.forEach(pupila => pupila.style.transform = 'translate(0px, 0px)');
+});
 
 // === NOVIDADE: FUNÇÃO QUE BUSCA OS PRODUTOS DA API EM C# ===
 function carregarCardapioDaApi() {
